@@ -1,0 +1,4405 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Carta virtual de Cevichería Tipo's - Pescados y mariscos frescos en Pueblo Libre. Delivery y recogida. Horario: 11:00 am - 5:00 pm">
+    <meta name="keywords" content="cevichería, pescados, mariscos, comida peruana, delivery, Pueblo Libre, ceviche, chicharrón">
+    <meta name="author" content="Cevichería Tipo's">
+    <title>Carta Virtual | Cebicheria Tipo´s</title>
+    <link rel="icon" href="https://i.ibb.co/bjT2CXKH/Captura.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --VERDE: #1C6125;
+            --ROJO: #ae2012;
+            --AMARILLO: #CED914;
+            --NEGRO: #000000;
+            --blanco: #ffffff;
+            --gris-claro: #f8f9fa;
+            --verde-claro: #e8f5e9;
+            --sombra: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--gris-claro);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .pantalla {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 1rem;
+            transition: all 0.4s ease;
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .pantalla.activa {
+            display: flex;
+            opacity: 1;
+            position: relative;
+        }
+
+        .header {
+            width: 100%;
+            padding: 1rem 0;
+            background-color: var(--blanco);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            text-align: center;
+            border-bottom: 2px solid var(--AMARILLO);
+        }
+
+        .logo {
+            max-width: 250px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .eslogan {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--VERDE);
+            margin: 1rem 0 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitulo {
+            font-size: 1rem;
+            color: var(--ROJO);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin: 1.5rem 0;
+            color: var(--VERDE);
+            text-align: center;
+            border-bottom: 2px solid var(--AMARILLO);
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin: 1.5rem 0;
+            color: var(--VERDE);
+            text-align: center;
+        }
+
+        .btn {
+            background: var(--VERDE);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--blanco);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: var(--ROJO);
+        }
+
+        .btn-regresar {
+            background: var(--AMARILLO);
+            color: var(--NEGRO);
+            margin-top: 1.5rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            margin: 0 auto 1.5rem;
+        }
+
+        .menu-btn-img {
+            background: var(--blanco);
+            border-radius: 8px;
+            padding: 1.2rem;
+            box-shadow: var(--sombra);
+            transition: all 0.3s;
+            border: 1px solid var(--VERDE);
+            cursor: pointer;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .btn-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            transition: background 0.3s ease;
+        }
+
+        .menu-btn-img:hover .btn-overlay {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-btn-img h3 {
+            font-family: 'Playfair Display', serif;
+            color: white;
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+            letter-spacing: 1px;
+        }
+
+        .menu-btn-img:hover {
+            transform: translateY(-3px);
+            border-color: var(--ROJO);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background-size: 105%;
+        }
+
+        .plato-lista {
+            list-style: none;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .plato-item {
+            background: var(--blanco);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--sombra);
+            transition: all 0.3s;
+            border-left: 3px solid var(--VERDE);
+        }
+
+        .plato-item:hover {
+            transform: translateX(3px);
+            border-left-color: var(--ROJO);
+        }
+
+        .plato-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+
+        .plato-texto {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .plato-nombre {
+            font-weight: 600;
+            color: var(--VERDE);
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .plato-precio {
+            background: var(--ROJO);
+            color: var(--blanco);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 600;
+            min-width: 70px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .precio-doble {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            min-width: 90px;
+        }
+
+        .precio-opcion {
+            display: flex;
+            justify-content: space-between;
+            background: var(--ROJO);
+            color: var(--blanco);
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .precio-tipo {
+            text-align: left;
+        }
+
+        .precio-valor {
+            text-align: right;
+            margin-left: 0.3rem;
+        }
+
+        .plato-desc {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+        }
+
+     .plato-imagen {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 180px; /* Altura fija para todos */
+    position: relative;
+    /* ELIMINA: aspect-ratio: 4/3; */
+}
+
+.plato-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s ease;
+}
+
+        .plato-imagen:hover img {
+            transform: scale(1.05);
+        }
+
+        .location-card-premium {
+            background: linear-gradient(180deg, #ffffff 0%, #fcfcfc 100%);
+            border-radius: 20px;
+            padding: 35px 25px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(28, 97, 37, 0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .location-card-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: var(--AMARILLO);
+            border-radius: 0 0 4px 4px;
+        }
+
+        .icon-anchor {
+            color: var(--VERDE);
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .premium-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--VERDE);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .premium-address {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-mapa-pro {
+            display: inline-block;
+            background-color: var(--VERDE);
+            color: #ffffff;
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(28, 97, 37, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-mapa-pro:hover {
+            background-color: var(--ROJO);
+            box-shadow: 0 6px 20px rgba(174, 32, 18, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .titulo-pro {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--VERDE);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            border-bottom: 3px solid var(--AMARILLO);
+            padding-bottom: 0.5rem;
+        }
+
+        .subtitulo-reserva {
+            text-align: center;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 2.5rem;
+            font-style: italic;
+        }
+
+        .form-reserva {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--blanco);
+            padding: 2rem 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--VERDE);
+        }
+
+        .form-grupo-pro {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-grupo-pro label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--VERDE);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .form-grupo-pro input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-grupo-pro input:focus {
+            outline: none;
+            border-color: var(--VERDE);
+            box-shadow: 0 0 0 4px var(--verde-claro);
+        }
+
+        .form-grid-pro {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .btn-enviar-reserva {
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem;
+            border-radius: 10px;
+            background: var(--VERDE);
+            color: var(--blanco);     
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-enviar-reserva:hover {
+            background: var(--ROJO);
+            transform: scale(1.02);
+        }
+
+        .info-pedidos {
+            background-color: var(--AMARILLO);
+            color: var(--NEGRO);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .horario {
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+            background-color: var(--VERDE);
+            color: var(--blanco);
+        }
+
+
+        .platos-inicio {
+            width: 100%;
+            max-width: 600px;
+            margin: 1.5rem auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--sombra);
+            border: 3px solid var(--AMARILLO);
+        }
+
+        .platos-inicio img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+    
+
+        .btn-agregar {
+            background-color: var(--VERDE);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-agregar:hover {
+            background-color: var(--ROJO);
+        }
+
+        /* ========== MODAL DEL CARRITO ========== */
+        .carrito-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .carrito-contenido {
+            max-width: 800px;
+            width: 95%;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 0 20px 60px rgba(28, 97, 37, 0.15);
+            position: relative;
+            border: 1px solid rgba(28, 97, 37, 0.1);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .carrito-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--VERDE);
+        }
+
+        .carrito-header h2 {
+            margin: 0;
+            color: var(--VERDE);
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .cerrar-carrito {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--ROJO);
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            transition: transform 0.3s;
+        }
+
+        .cerrar-carrito:hover {
+            transform: scale(1.2);
+        }
+
+        .carrito-vacio {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        /* ========== ITEMS DEL CARRITO ========== */
+        .carrito-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+
+        .carrito-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(28, 97, 37, 0.1);
+            border-color: var(--VERDE);
+        }
+
+        .carrito-item-imagen {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .carrito-item-imagen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carrito-item-info {
+            flex: 1;
+        }
+
+        .carrito-item-nombre {
+            font-weight: 600;
+            color: var(--VERDE);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .carrito-item-precio {
+            font-weight: 600;
+            color: var(--ROJO);
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .carrito-item-cantidad {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: var(--gris-claro);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+        }
+
+        .cantidad-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--VERDE);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .cantidad-btn:hover {
+            background: var(--ROJO);
+            transform: scale(1.1);
+        }
+
+        .cantidad-btn.restar {
+            background: var(--ROJO);
+        }
+
+        .cantidad-btn.restar:hover {
+            background: #8a1a0e;
+        }
+
+        .carrito-cantidad-numero {
+            font-weight: bold;
+            font-size: 1.1rem;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .carrito-item-subtotal {
+            font-weight: 700;
+            color: var(--VERDE);
+            font-size: 1.2rem;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .carrito-item-eliminar {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .carrito-item-eliminar:hover {
+            background: #ff4757;
+            transform: scale(1.1);
+        }
+
+        .especificaciones-carrito {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* ========== RESUMEN DEL CARRITO ========== */
+        .carrito-resumen {
+            background: linear-gradient(135deg, var(--VERDE) 0%, #2a7e36 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(28, 97, 37, 0.3);
+        }
+
+        .resumen-linea {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .resumen-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .carrito-botones {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-vaciar {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-vaciar:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-finalizar {
+            background: var(--AMARILLO);
+            color: var(--NEGRO);
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .btn-finalizar:hover {
+            background: #e6d600;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(206, 217, 20, 0.3);
+        }
+
+        /* ========== SUGERENCIAS ========== */
+        .sugerencias-section {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+            border-radius: 15px;
+            border-left: 5px solid var(--AMARILLO);
+        }
+
+        .sugerencias-titulo {
+            color: var(--NEGRO);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .sugerencias-titulo::before {
+            content: "💡";
+            font-size: 1.8rem;
+        }
+
+        .sugerencias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sugerencia-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .sugerencia-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--VERDE);
+            box-shadow: 0 8px 20px rgba(28, 97, 37, 0.15);
+        }
+
+        .sugerencia-icono {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .sugerencia-info {
+            flex: 1;
+        }
+
+        .sugerencia-nombre {
+            font-weight: 600;
+            color: var(--VERDE);
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .sugerencia-precio {
+            color: var(--ROJO);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .sugerencias-nota {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px dashed #ccc;
+        }
+
+        /* ========== ANIMACIONES ========== */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .formulario-pedido {
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--VERDE);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--VERDE);
+            outline: none;
+        }
+
+        .metodo-pago {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .metodo-pago-opcion {
+            flex: 1;
+            min-width: 120px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .metodo-pago-opcion.seleccionado {
+            border-color: var(--VERDE);
+            background-color: var(--verde-claro);
+        }
+
+        .metodo-pago-imagen {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 0.5rem;
+            object-fit: contain;
+        }
+
+        .campo-pago {
+            display: none;
+        }
+
+        .campo-pago.mostrar {
+            display: block;
+        }
+
+        .modal-personalizacion {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-personalizacion-contenido {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-personalizacion-titulo {
+            color: var(--VERDE);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+        }
+
+        .categoria-titulo {
+            font-weight: bold;
+            color: var(--VERDE);
+            margin: 15px 0 8px 0;
+            text-align: left;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .opciones-personalizacion {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .opcion-personalizacion {
+            background: var(--gris-claro);
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .opcion-personalizacion:hover {
+            border-color: var(--VERDE);
+            background: #f0f0f0;
+        }
+
+        .opcion-personalizacion.seleccionado {
+            background: var(--VERDE);
+            color: white;
+            border-color: var(--VERDE);
+            box-shadow: 0 0 0 2px rgba(28, 97, 37, 0.2);
+        }
+
+        .campo-especificaciones {
+            margin-bottom: 1.5rem;
+        }
+
+        .campo-especificaciones label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--VERDE);
+        }
+
+        .campo-especificaciones textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .botones-modal-personalizacion {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cancelar-personalizacion {
+            background: #ccc;
+            color: #333;
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-confirmar-personalizacion {
+            background: var(--VERDE);
+            color: white;
+            flex: 2;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cancelar-personalizacion:hover {
+            background: #aaa;
+        }
+
+        .btn-confirmar-personalizacion:hover {
+            background: var(--ROJO);
+        }
+
+        .error-mensaje {
+            color: var(--ROJO);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .logo {
+                max-width: 200px;
+            }
+            
+            .plato-info {
+                flex-direction: column;
+            }
+            
+            .plato-precio, .precio-doble {
+                margin-top: 0.5rem;
+                align-self: flex-start;
+            }
+            
+            .platos-inicio {
+                max-width: 90%;
+            }
+            
+            .plato-imagen {
+                height: 150px;
+            }
+
+            .menu-btn-img {
+                min-height: 100px;
+                padding: 1rem;
+            }
+            
+            .menu-btn-img h3 {
+                font-size: 1.2rem;
+            }
+
+            .location-card-premium {
+                padding: 25px 15px;
+                margin-top: 20px;
+            }
+
+            .premium-title {
+                font-size: 1.3rem;
+            }
+
+            .form-reserva {
+                padding: 1.5rem;
+            }
+
+            .form-grid-pro {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .titulo-pro {
+                font-size: 1.8rem;
+            }
+
+            .carrito-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .carrito-item-imagen {
+                margin: 0 auto;
+            }
+            
+            .carrito-item-cantidad {
+                justify-content: center;
+            }
+            
+            .carrito-botones {
+                flex-direction: column;
+            }
+            
+            .sugerencias-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .carrito-contenido {
+                padding: 1.5rem;
+                margin: 1rem auto;
+            }
+            
+            .carrito-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .carrito-resumen {
+                padding: 1.5rem;
+            }
+
+            .metodo-pago {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .plato-nombre {
+                font-size: 0.95rem;
+            }
+            
+            .precio-doble {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .plato-imagen {
+                height: 120px;
+            }
+
+            .menu-btn-img {
+                min-height: 90px;
+            }
+            
+            .menu-btn-img h3 {
+                font-size: 1.1rem;
+            }
+
+            .carrito-contenido {
+                padding: 1rem;
+            }
+
+            .titulo-pro {
+                font-size: 1.6rem;
+            }
+
+            .form-reserva {
+                padding: 1rem;
+            }
+        }
+        /* Mejora para las sugerencias con imágenes */
+.sugerencia-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border-radius: 12px;
+    transition: all 0.3s;
+    border: 1px solid #eee;
+}
+
+.sugerencia-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: var(--VERDE);
+}
+
+.sugerencia-item img {
+    border-radius: 6px;
+}
+
+.sugerencia-info {
+    flex: 1;
+}
+
+.sugerencia-nombre {
+    font-weight: 600;
+    color: var(--VERDE);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.sugerencia-precio {
+    color: var(--ROJO);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+/* Indicador de campo obligatorio en personalización */
+.categoria-titulo[style*="color: var(--ROJO)"] {
+    color: var(--ROJO) !important;
+    font-weight: bold;
+}
+
+/* Asterisco rojo para campos obligatorios */
+.categoria-titulo.obligatorio::after {
+    content: " *";
+    color: var(--ROJO);
+    font-weight: bold;
+}
+
+/* Mensaje de error en el modal */
+.mensaje-error-modal {
+    color: var(--ROJO);
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 10px 0;
+    padding: 8px;
+    background: #ffe6e6;
+    border-radius: 5px;
+    display: none;
+}
+
+.mensaje-error-modal.mostrar {
+    display: block;
+}
+/* Estilos para las opciones de personalización */
+.opcion-personalizacion {
+    background: var(--gris-claro);
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.opcion-personalizacion:hover {
+    border-color: var(--VERDE);
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.opcion-personalizacion.seleccionado {
+    background: var(--VERDE);
+    color: white;
+    border-color: var(--VERDE);
+    box-shadow: 0 0 0 3px rgba(28, 97, 37, 0.2);
+}
+
+/* Separadores visuales entre secciones */
+.separador-seccion {
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gris-claro), transparent);
+    margin: 25px 0;
+}
+/* Notificaciones sutiles */
+#notificacion-agregado {
+    animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2s;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(120%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(120%);
+    }
+}
+/* Mejora para el botón del carrito */
+.carrito-btn {
+    position: fixed;
+    width: 70px;
+    height: 70px;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--ROJO);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(174, 32, 18, 0.4);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+}
+
+.carrito-btn:hover {
+    transform: scale(1.1);
+    background-color: #c62828;
+    box-shadow: 0 6px 20px rgba(174, 32, 18, 0.6);
+}
+
+.carrito-btn span {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.carrito-cantidad {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--AMARILLO);
+    color: var(--NEGRO);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Asegurar que el modal del carrito tenga el z-index más alto */
+.carrito-modal {
+    z-index: 10000;
+}
+
+.whatsapp-btn {
+    z-index: 10001; /* Una capa más arriba que el carrito */
+}
+/* ========== BOTONES FLOTANTES ========== */
+/* Botón de WhatsApp - izquierda */
+.whatsapp-btn {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 20px;
+    left: 20px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+}
+
+.whatsapp-btn:hover {
+    transform: scale(1.1);
+    background-color: #1da851;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+/* Botón del carrito - derecha */
+.carrito-btn {
+    position: fixed;
+    width: 70px;
+    height: 70px;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--ROJO);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(174, 32, 18, 0.4);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+}
+
+.carrito-btn:hover {
+    transform: scale(1.1);
+    background-color: #c62828;
+    box-shadow: 0 6px 20px rgba(174, 32, 18, 0.6);
+}
+
+.carrito-btn span {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.carrito-cantidad {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--AMARILLO);
+    color: var(--NEGRO);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+    .whatsapp-btn {
+        width: 55px;
+        height: 55px;
+        bottom: 15px;
+        left: 15px;
+        font-size: 22px;
+    }
+    
+    .carrito-btn {
+        width: 60px;
+        height: 60px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .carrito-cantidad {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .whatsapp-btn {
+        width: 50px;
+        height: 50px;
+        bottom: 10px;
+        left: 10px;
+        font-size: 20px;
+    }
+    
+    .carrito-btn {
+        width: 55px;
+        height: 55px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .carrito-cantidad {
+        width: 22px;
+        height: 22px;
+        font-size: 0.75rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Botón de WhatsApp flotante -->
+    <a href="https://wa.me/51977420834" class="whatsapp-btn" target="_blank">
+        <span style="font-size: 24px;">📱</span>
+    </a>
+
+    <!-- Botón del carrito -->
+    <div class="carrito-btn" onclick="mostrarCarrito()">
+    <span>🛒</span>
+    <div class="carrito-cantidad" id="carrito-contador">0</div>
+</div>
+
+    <!-- Modal del carrito -->
+    <div id="carrito-modal" class="carrito-modal">
+        <div class="carrito-contenido">
+            <div class="carrito-header">
+                <h2>🛒 Tu Pedido</h2>
+                <button class="cerrar-carrito" onclick="cerrarCarrito()">&times;</button>
+            </div>
+            
+            <div id="carrito-items"></div>
+            
+            <div id="carrito-vacio" class="carrito-vacio">
+                <div style="text-align: center; padding: 3rem 1rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+                    <h3 style="color: var(--VERDE); margin-bottom: 0.5rem;">Carrito Vacío</h3>
+                    <p style="color: #666;">Agrega platos deliciosos para comenzar</p>
+                    <button class="btn" onclick="mostrarPantalla('menu'); cerrarCarrito();" style="margin-top: 1rem;">
+                        Ver Menú
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sección de Sugerencias -->
+            <div id="sugerencias-container" class="sugerencias-section" style="display: none;">
+                <div class="sugerencias-titulo">¿Te faltó algo?</div>
+                <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.95rem;">Completa tu experiencia con estos acompañamientos recomendados:</p>
+                
+                <div class="sugerencias-grid">
+                    <!-- Las sugerencias se generarán con JavaScript -->
+                </div>
+                
+                <p class="sugerencias-nota">¡Haz tu pedido más completo y delicioso!</p>
+            </div>
+            
+            <!-- Resumen y Total -->
+            <div id="carrito-resumen" class="carrito-resumen" style="display: none;">
+                <div class="resumen-linea">
+                    <span>Subtotal:</span>
+                    <span id="subtotal-carrito">S/ 0.00</span>
+                </div>
+                <div class="resumen-linea">
+                    <span>Envío:</span>
+                    <span id="envio-carrito">S/ 0.00</span>
+                </div>
+                <div class="resumen-linea resumen-total">
+                    <span>TOTAL:</span>
+                    <span id="total-carrito">S/ 0.00</span>
+                </div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div id="carrito-botones" class="carrito-botones" style="display: none;">
+                <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar Carrito</button>
+                <button class="btn-finalizar" onclick="mostrarFormularioPedido()">
+                    <span>Finalizar Pedido</span>
+                    <span>→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Personalización -->
+    <div id="modal-personalizacion" class="modal-personalizacion">
+        <div class="modal-personalizacion-contenido">
+            <span class="cerrar-carrito" onclick="cerrarModalPersonalizacion()" style="position: absolute; right: 15px; top: 15px;">&times;</span>
+            
+            <h3 class="modal-personalizacion-titulo" id="titulo-personalizacion">Personaliza tu pedido</h3>
+            
+            <div id="opciones-container" class="opciones-personalizacion">
+                <!-- Las opciones se generarán con JavaScript -->
+            </div>
+            
+            <div class="campo-especificaciones">
+                <label for="especificaciones-personalizacion">Especificaciones adicionales:</label>
+                <textarea id="especificaciones-personalizacion" placeholder="Ej: Sin cebolla, extra picante, etc."></textarea>
+            </div>
+            
+            <div class="botones-modal-personalizacion">
+                <button class="btn-cancelar-personalizacion" onclick="cerrarModalPersonalizacion()">Cancelar</button>
+                <button class="btn-confirmar-personalizacion" onclick="confirmarPersonalizacion()">Agregar al Carrito</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal del Formulario de Pedido -->
+    <div id="modal-formulario-pedido" class="carrito-modal">
+        <div class="carrito-contenido">
+            <span class="cerrar-carrito" onclick="cerrarFormularioPedido()">&times;</span>
+            <h2>Completar Pedido</h2>
+            
+            <div class="formulario-pedido">
+                <!-- Resumen del pedido -->
+                <div id="resumen-pedido" style="background: var(--gris-claro); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--VERDE); margin-bottom: 0.5rem;">Resumen del Pedido:</h4>
+                    <div id="detalles-resumen"></div>
+                </div>
+                
+                <!-- Datos del cliente -->
+                <div class="form-group">
+                    <label for="cliente-nombre">Tu Nombre *</label>
+                    <input type="text" id="cliente-nombre" placeholder="Ej: Juan Pérez" required>
+                    <div class="error-mensaje" id="error-nombre">Por favor ingresa tu nombre</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cliente-telefono">WhatsApp *</label>
+                    <input type="tel" id="cliente-telefono" placeholder="Ej: 987654321" required>
+                    <div class="error-mensaje" id="error-telefono">Por favor ingresa tu WhatsApp</div>
+                </div>
+                
+                <!-- Tipo de pedido -->
+                <div class="form-group">
+                    <label>Tipo de Pedido *</label>
+                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                        <button type="button" id="btn-delivery" class="btn-agregar" style="flex: 1;" onclick="seleccionarTipoPedido('delivery')"> Delivery</button>
+                        <button type="button" id="btn-recoger" class="btn-agregar" style="flex: 1; background: var(--gris-claro); color: #333;" onclick="seleccionarTipoPedido('recoger')"> Recoger</button>
+                    </div>
+                </div>
+                
+                <!-- Sección de Delivery -->
+                <div id="seccion-delivery" style="display: none;">
+                    <div class="form-group">
+                        <label for="cliente-distrito">Distrito *</label>
+                        <select id="cliente-distrito" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px;" onchange="actualizarCostoDelivery()">
+                            <option value="">Selecciona tu distrito</option>
+                            <option value="Hospital Militar Reja Negra - S/ 0">Hospital Militar (Reja Negra - Av brasil)</option>
+                            <option value="Pueblo Libre - S/ 3">Pueblo Libre — S/ 3</option>
+                            <option value="Jesus Maria - S/ 5">Jesús María — S/ 5</option>
+                            <option value="Magdalena - S/ 5">Magdalena — S/ 5</option>
+                            <option value="Breña - S/ 6">Breña — S/ 6</option>
+                            <option value="Lince - S/ 7">Lince — S/ 7</option>
+                           <option value="San Miguel - S/ 7">San Miguel — S/ 7</option>
+                           <option value="otro">Otro distrito (Consultar disponibilidad)</option>
+                        </select>
+                        <div class="error-mensaje" id="error-distrito">Por favor selecciona tu distrito</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cliente-direccion">Dirección completa *</label>
+                        <textarea id="cliente-direccion" placeholder="Calle, Número, Departamento, Referencia, Piso, etc." rows="3"></textarea>
+                        <div class="error-mensaje" id="error-direccion">Por favor ingresa tu dirección</div>
+                    </div>
+                </div>
+                
+                <!-- Método de pago -->
+                <div class="form-group">
+                    <label>Método de Pago *</label>
+                    <div class="metodo-pago">
+                        <div class="metodo-pago-opcion seleccionado" onclick="seleccionarMetodoPago('efectivo')">
+                          <img src="https://i.ibb.co/dwTq41BM/2331920.png" alt="2331920" border="0" class="metodo-pago-imagen" alt="Efectivo">
+                            <div>Efectivo</div>
+                        </div>
+                        <div class="metodo-pago-opcion" onclick="seleccionarMetodoPago('yape')">
+                          <img src="https://i.ibb.co/kVNWGW2F/yape.png" alt="yape" border="0" class="metodo-pago-imagen" alt="Yape">
+                            <div>Yape</div>
+                        </div>
+                         <div class="metodo-pago-opcion" onclick="seleccionarMetodoPago('plin')">
+                           <img src="https://i.ibb.co/KjvdrBP3/promo-plin.webp" alt="promo-plin" border="0" class="metodo-pago-imagen" alt="Plin">
+                            <div>Plin</div>
+                        </div>
+                        <div class="metodo-pago-opcion" onclick="seleccionarMetodoPago('tarjeta')">
+                            <img src="https://cdn-icons-png.flaticon.com/512/349/349221.png" class="metodo-pago-imagen" alt="Tarjeta">
+                            <div>Tarjeta</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campo para Efectivo -->
+                <div id="campo-efectivo" class="campo-pago mostrar">
+                    <div class="form-group">
+                        <label for="monto-efectivo">¿Con cuánto pagas en efectivo? *</label>
+                        <input type="number" id="monto-efectivo" placeholder="Ej: 150.00" step="0.01" min="0" oninput="calcularVuelto()">
+                        <div class="error-mensaje" id="error-efectivo">Por favor ingresa el monto con el que pagarás</div>
+                    </div>
+                    <div id="vuelto-info" style="display: none; padding: 10px; border-radius: 5px; margin-top: 10px; border: 2px solid transparent;">
+                        <p style="margin: 0; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+                            <span id="vuelto-texto">Vuelto:</span>
+                            <span id="monto-vuelto" style="font-size: 1.1rem;">S/ 0.00</span>
+                        </p>
+                        <p id="advertencia-falta" style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--ROJO); display: none;">
+                            ⚠ Asegúrate de tener el dinero completo
+                        </p>
+                    </div>
+                    <div style="margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 5px; font-size: 0.9rem; color: #666;">
+                        💡 <strong>Total a pagar: <span id="total-recordatorio">S/ 0.00</span></strong>
+                    </div>
+                </div>
+
+                <!-- Campo para Yape -->
+                <div id="campo-yape" class="campo-pago">
+                    <div class="form-group">
+                        <p style="color: var(--VERDE); font-weight: bold;">📱 Pago con Yape</p>
+                        <p style="font-size: 0.9rem; color: #666;">El repartidor compartirá el número de Yape para la transferencia por WhatsApp.</p>
+                    </div>
+                </div>
+
+                <!-- Campo para Plin -->
+                <div id="campo-plin" class="campo-pago">
+                    <div class="form-group">
+                        <p style="color: var(--VERDE); font-weight: bold;">📱 Pago con Plin</p>
+                        <p style="font-size: 0.9rem; color: #666;">El repartidor compartirá el número de Plin para la transferencia por WhatsApp.</p>
+                    </div>
+                </div>
+
+                <!-- Campo para Tarjeta -->
+                <div id="campo-tarjeta" class="campo-pago">
+                    <div class="form-group">
+                        <p style="color: var(--VERDE); font-weight: bold;">💳 Pago con Tarjeta</p>
+                        <p style="font-size: 0.9rem; color: #666;">El repartidor llevará POS para cobro con tarjeta (Visa/Mastercard).</p>
+                    </div>
+                </div>
+                
+                <!-- Instrucciones adicionales -->
+                <div class="form-group">
+                    <label for="instrucciones">Instrucciones adicionales</label>
+                    <textarea id="instrucciones" placeholder="Ej: llamar antes de llegar, Dejar en recepción etc." rows="3"></textarea>
+                </div>
+                
+                <!-- Resumen de pago -->
+                <div style="background: var(--AMARILLO); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Sub-total:</span>
+                        <span id="subtotal-pedido">S/ 0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Delivery:</span>
+                        <span id="costo-delivery">S/ 0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; border-top: 2px solid var(--VERDE); padding-top: 5px;">
+                        <span>TOTAL A PAGAR:</span>
+                        <span id="total-pedido">S/ 0.00</span>
+                    </div>
+                </div>
+                
+                <!-- Botones -->
+                <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                    <button type="button" class="btn-cancelar-personalizacion" onclick="cerrarFormularioPedido()">Cancelar</button>
+                    <button type="button" class="btn-confirmar-personalizacion" onclick="validarYEnviarPedido()">Enviar Pedido por WhatsApp</button>
+                </div>
+                
+                <p style="font-size: 0.8rem; color: #666; margin-top: 1rem; text-align: center;">
+                   ¡Dale un último vistazo a tu carrito! Al confirmar, tu pedido será definitivo. Así nos aseguramos de enviarte exactamente lo que elegiste sin demoras.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header con logo -->
+    <div class="header">
+        <img src="https://i.ibb.co/bjT2CXKH/Captura.png" alt="Logo Tipo's" class="logo">
+        <div class="eslogan">PESCADOS & MARISCOS</div>
+        <div class="subtitulo">PASIÓN POR LA BUENA COMIDA</div>
+    </div>
+
+    <!-- Pantalla de bienvenida -->
+    <div id="bienvenida" class="pantalla activa">
+        <div class="container">
+            <div class="platos-inicio">
+                <img src="https://i.ibb.co/mCgLnpH8/imagen-2025-08-22-005748205.png" alt="Platos de la Cevichería Tipo's">
+            </div>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+                <button class="btn" onclick="mostrarPantalla('menu')">
+                    Ver Carta 
+                </button>
+                <button class="btn" onclick="mostrarPantalla('reservas')" style="background: var(--ROJO);">
+                     Agendar Reserva
+                </button>
+            </div>
+
+            <!-- SECCIÓN DE UBICACIÓN -->
+            <div class="location-card-premium">
+                <svg class="icon-anchor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="5" r="3"></circle>
+                    <line x1="12" y1="22" x2="12" y2="8"></line>
+                    <path d="M5 12H2a10 10 0 0 0 20 0h-3"></path>
+                </svg>
+
+                <h3 class="premium-title">
+                    Sigue la corriente hasta TIPO'S
+                </h3>
+                <p class="premium-address">
+                    Av. Brasil 2804, Pueblo Libre.
+                </p>
+
+                <a href="https://maps.app.goo.gl/DzDT7KyLXhH5m8AC6" target="_blank" class="btn-mapa-pro">
+                    Ver Ubicación
+                </a>
+            </div>
+            
+            <!-- Nota sobre imágenes -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="font-size: 0.75rem; color: #888; max-width: 600px; margin: 0 auto;">
+                    Nota: Las imágenes mostradas son ilustrativas. 
+                    Nuestros platos mantienen la calidad y esencia que nos caracteriza.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE RESERVAS -->
+    <div id="reservas" class="pantalla">
+        <div class="container">
+            <h2 class="titulo-pro">Agendar una Reserva</h2>
+            <p class="subtitulo-reserva">Elige tu fecha y te contactaremos por WhatsApp para confirmar.</p>
+            
+            <div class="form-reserva">
+                <div class="form-grupo-pro">
+                    <label for="reserva-nombre">Tu Nombre:</label>
+                    <input type="text" id="reserva-nombre" placeholder="Ej: Juan Pérez">
+                </div>
+                
+                <div class="form-grupo-pro">
+                    <label for="reserva-telefono">Tu WhatsApp:</label>
+                    <input type="tel" id="reserva-telefono" placeholder="Ej: 987 654 321">
+                </div>
+                
+                <div class="form-grid-pro">
+                    <div class="form-grupo-pro">
+                        <label for="reserva-personas">Personas:</label>
+                        <input type="number" id="reserva-personas" value="2" min="1">
+                    </div>
+                    <div class="form-grupo-pro">
+                        <label for="reserva-fecha">Fecha:</label>
+                        <input type="date" id="reserva-fecha">
+                    </div>
+                </div>
+                
+                <div class="form-grupo-pro">
+                    <label for="reserva-hora">Hora (11:00 am - 5:00 pm):</label>
+                    <input type="time" id="reserva-hora">
+                </div>
+                
+                <button class="btn-enviar-reserva" onclick="enviarReservaWhatsApp()">
+                    <span>Solicitar Reserva por WhatsApp</span> 
+                </button>
+                
+                <button class="btn btn-regresar" onclick="mostrarPantalla('bienvenida')" style="width:100%; margin-top: 1rem;">
+                    Volver al Inicio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menú principal -->
+    <div id="menu" class="pantalla">
+        <div class="container">
+            <h1>Nuestra Carta</h1>
+            
+            <div class="menu-grid">
+                <div class="menu-btn-img" onclick="mostrarPantalla('entradas')" style="background-image: url('https://i.ibb.co/nM0bdHD1/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>ENTRADAS</h3>
+                </div>
+                
+                <div class="menu-btn-img" onclick="mostrarPantalla('cebiches')" style="background-image: url('https://i.ibb.co/PZZWqx0D/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>CEBICHES</h3>
+                </div>
+                
+                <div class="menu-btn-img" onclick="mostrarPantalla('combinaciones')" style="background-image: url('https://i.ibb.co/TBYr5rL0/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>COMBINACIONES</h3>
+                </div>
+
+                <div class="menu-btn-img" onclick="mostrarPantalla('rondas')" style="background-image: url('https://i.ibb.co/HDdfj5wP/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>RONDAS</h3>
+                </div>
+                
+                <div class="menu-btn-img" onclick="mostrarPantalla('chicharrones')" style="background-image: url('https://i.ibb.co/pjqZqGwy/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>CHICHARRONES</h3>
+                </div>
+
+                <div class="menu-btn-img" onclick="mostrarPantalla('pescados-enteros')" style="background-image: url('https://i.ibb.co/Fqj0gdj2/Imagen-de-Whats-App-2025-09-25-a-las-01-12-43-723ade84.jpg')">
+                    <div class="btn-overlay"></div>
+                    <h3>PESCADOS ENTEROS</h3>
+                </div>
+                
+                <div class="menu-btn-img" onclick="mostrarPantalla('sopas')" style="background-image: url('https://i.ibb.co/V0FJzzJr/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>SOPAS</h3>
+                </div>
+                
+                <div class="menu-btn-img" onclick="mostrarPantalla('platos-de-fondo')" style="background-image: url('https://i.ibb.co/4RyVjXG4/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>PLATOS DE FONDO</h3>
+                </div>
+
+                <div class="menu-btn-img" onclick="mostrarPantalla('guardiciones')" style="background-image: url('https://i.ibb.co/4Z8pSVyL/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>GUARDICIONES</h3>
+                </div>
+                
+                <div class="menu-btn-img" onclick="mostrarPantalla('bebidas')" style="background-image: url('https://i.ibb.co/kVTSk7ct/image.png')">
+                    <div class="btn-overlay"></div>
+                    <h3>BEBIDAS</h3>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('bienvenida')">
+                    INICIO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Entradas -->
+    <div id="entradas" class="pantalla">
+        <div class="container">
+            <h2>Entradas</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Tequeños Jamon y Queso / Tequeños de Langostinos</div>
+                        </div>
+                        <div class="plato-precio">S/16</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/cStD29b9/imagen-2025-08-25-131616548.png" alt="Tequeños langostino">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Tequeños Jamon y Queso', 16)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Causa de pulpa de cangrejo</div>
+                            <div class="plato-desc">La tradicional causa rellena de verduras, pulpa de cangrejo y mayonesa.</div>
+                        </div>
+                        <div class="plato-precio">S/25</div>
+                    </div>
+                    <div class="plato-imagen">  
+                        <img src="https://i.ibb.co/nM0bdHD1/image.png" alt="Causa de pulpa de cangrejo">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Causa de pulpa de cangrejo', 25)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Causa de langostinos</div>
+                            <div class="plato-desc">La tradicional causa rellena de verduras, pulpa de langostinos y mayonesa.</div>
+                        </div>
+                        <div class="plato-precio">S/25</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/Xrx38nKW/image.png" alt="Causa de langostinos">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Causa de langostinos', 25)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Causa acebichada</div>
+                            <div class="plato-desc">El dúo perfecto. Deliciosa causa limeña de pulpa de cangrejo acompañada nuestro cebiche de pescado.</div>
+                        </div>
+                        <div class="plato-precio">S/30</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/VWXBLY3g/image.png" alt="Causa acebichada">        
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Causa acebichada', 30, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Causa de pollo</div>
+                            <div class="plato-desc">La tradicional causa rellena de verduras, pollo desmenuzado y mayonesa.</div>
+                        </div>
+                        <div class="plato-precio">S/23</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/3tb4z2j/image.png" alt="Causa de pollo">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Causa de pollo', 23)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Poderoso</div>
+                            <div class="plato-desc">Nuestro energizante natural marino, leche de tigre con crema de ají amarillo, trozos de pescado, mixtura de mariscos y porción de nuestro tradicional chicharrón de pota</div>
+                        </div>
+                        <div class="plato-precio">S/18</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/zVb5bCD5/image.png" alt="Poderoso">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Poderoso', 18, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Leche de pantera</div>
+                            <div class="plato-desc">Potente combinación de leche de tigre, conchas negras y porción de chicharrón de pota.</div>
+                        </div>
+                        <div class="plato-precio">S/18</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/0jrJRSXN/image.png" alt="Leche de pantera">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Leche de pantera', 18, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Leche de tigre</div>
+                            <div class="plato-desc">Un clásico de tipos. El juguito de nuestro cebiche con trozos de pescado, cebolla, ají, choclo, y chicharrón de pota. ¡Ideal para empezar cualquier comida!</div>
+                        </div>
+                        <div class="plato-precio">S/16</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/ZzchbZnF/image.png" alt="Leche de tigre">  
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Leche de tigre', 16, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+            </ul>
+
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú  
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Cebiches -->
+    <div id="cebiches" class="pantalla">
+        <div class="container">
+            <h2>Cebiches</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cebiche de pescado</div>
+                        </div>
+                        <div class="plato-precio">S/35</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/PZZWqx0D/image.png" alt="Cebiche de pescado">        
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Cebiche de pescado', 35, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cebiche mixto</div>
+                            <div class="plato-desc">(Pescado, pulpo, langostino)</div>
+                        </div>
+                        <div class="plato-precio">S/38</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/RGr2Q9WM/image.png" alt="Cebiche mixto">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Cebiche mixto', 38, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cebiche de conchas negras</div>
+                        </div>
+                        <div class="plato-precio">S/36</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/mrPsPMcp/image.png" alt="Cebiche de conchas negras">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Cebiche de conchas negras', 36, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cebiche clásico</div>
+                            <div class="plato-desc">(Pescado, conchas negras, camote, canchita serrana)</div>
+                        </div>
+                        <div class="plato-precio">S/48</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/vx4v2CrJ/image.png" alt="Cebiche clásico">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Cebiche clásico', 48, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Tiradito de pescado</div>
+                        </div>
+                        <div class="plato-precio">S/32</div>  
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/d49T9mHp/image.png" alt="Tiradito de pescado">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Tiradito de pescado', 32, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+            </ul>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Combinaciones -->
+    <div id="combinaciones" class="pantalla">
+        <div class="container">
+            <h2>Combinaciones</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Combinado 1</div>
+                            <div class="plato-desc">(Cebiche de pescado con chicharrón de pota)</div>
+                        </div>
+                        <div class="plato-precio">S/32</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/TBYr5rL0/image.png" alt="Combinado 1">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Combinado 1', 32, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Combinado 2</div>
+                            <div class="plato-desc">(Cebiche de pescado con chicharrón de pescado)</div>
+                        </div>
+                        <div class="plato-precio">S/34</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/BVKkLW5z/image.png" alt="Combinado 2">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Combinado 2', 34, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>  
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Doble Marino</div>
+                            <div class="plato-desc">(Cebiche de pescado / arroz con mariscos)</div>
+                        </div>
+                        <div class="plato-precio">S/35</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/JjkMv1yy/image.png" alt="Doble Marino">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Doble Marino', 35, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Doble Marino 2</div>
+                            <div class="plato-desc">(Cebiche de pescado / Chaufa con mariscos o pescado )</div>
+                        </div>
+                        <div class="plato-precio">S/42</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/1tJ2RHwp/image.png" alt="Doble Marino 2">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalCombinadoMarino('Doble Marino 2', 42)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Triple Marino 1</div>
+                            <div class="plato-desc">(Cebiche, arroz con mariscos y chicharron de pota)</div>
+                        </div>
+                        <div class="plato-precio">S/34</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/mChfcMLv/image.png" alt="Triple Marino 1">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Triple Marino 1', 34, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Triple Marino 2</div>
+                            <div class="plato-desc">(Cebiche, arroz con mariscos y chicharron de pota)</div>
+                        </div>
+                        <div class="plato-precio">S/38</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/21zbX8WY/image.png" alt="Triple Marino 2">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Triple Marino 2', 38, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Triple Marino 3</div>
+                            <div class="plato-desc">(Cebiche, chaufa de pescado/mariscos y chicharron de pota)</div>
+                        </div>
+                        <div class="plato-precio">S/38</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/Xf0N7cqn/image.png" alt="Triple Marino 3">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalCombinadoMarino('Triple Marino 3', 38)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Triple Marino 4</div>
+                            <div class="plato-desc">(Cebiche, chaufa de pescado/mariscos y chicharron de pescado)</div>
+                        </div>
+                        <div class="plato-precio">S/42</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/zWCVCgZP/image.png" alt="Triple Marino 4">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalCombinadoMarino('Triple Marino 4', 42)">Agregar al pedido</button>
+                </li>
+            </ul>
+
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Triples -->
+    <div id="rondas" class="pantalla">
+        <div class="container">
+            <h2>Triples</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Ronda Marina 1</div>
+                            <div class="plato-desc">(Causa de pulpa de cangrejo cebiche, tiradito de pescado, arroz c/mariscos y chicharron de pota)</div>
+                        </div>
+                        <div class="plato-precio">S/61</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/HDdfj5wP/image.png" alt="Ronda Marina 1">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Ronda Marina 1', 61, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Ronda Marina 2</div>
+                            <div class="plato-desc">(Causa de pulpa de cangrejo cebiche, tiradito de pescado, arroz c/mariscos y chicharron de pota)</div>
+                        </div>
+                        <div class="plato-precio">S/64</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/MkQhRd8p/image.png" alt="Ronda Marina 2">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Ronda Marina 2', 64, ['Sin ají', 'Poco ají', 'Picante'])">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Ronda Marina 3</div>
+                            <div class="plato-desc">(Causa de pulpa de cangrejo cebiche, tiradito de pescado, arroz chaufa c/mariscos y chicharron de pota)</div>
+                        </div>
+                        <div class="plato-precio">S/65</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/d4ZpvW46/image.png" alt="Ronda Marina 3">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalCombinadoMarino('Ronda Marina 3', 65)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Ronda Marina 4</div>
+                            <div class="plato-desc">(Causa de pulpa de cangrejo, cebiche, chaufa de pescado/mariscos y chicharron de pescado)</div>
+                        </div>
+                        <div class="plato-precio">S/68</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/LhrcMC5Q/imagen-2025-12-04-002649605.png" alt="Ronda Marina 4">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalCombinadoMarino('Ronda Marina 4', 68)">Agregar al pedido</button>
+                </li>
+            </ul>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Chicharrones -->
+    <div id="chicharrones" class="pantalla">
+        <div class="container">
+            <h2>Chicharrones</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Jalea Mixta</div>
+                            <div class="plato-desc">(Pescado, pota, langostino, yuyo, yuca, sarsa de cebolla)</div>
+                        </div>
+                        <div class="plato-precio">S/38</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/pjqZqGwy/image.png" alt="Jalea Mixta">       
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Jalea Mixta', 38)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Jalea de pescado</div>
+                            <div class="plato-desc">(Pescado, langostino, yuyo, yuca, sarsa de cebolla)</div>
+                        </div>
+                        <div class="plato-precio">S/40</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/9kZw57cQ/image.png" alt="Jalea de pescado">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Jalea de pescado', 40)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Chicharrón de pescado</div>
+                            <div class="plato-desc">(Chicharrón de pescado, yucas fritas y de sarsa criolla)</div>
+                        </div>
+                        <div class="plato-precio">S/34</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/vvR6B9Hg/image.png" alt="Chicharrón de pescado">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Chicharrón de pescado', 34)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Chicharrón de langostinos</div>
+                            <div class="plato-desc">(Chicharrón de langostinos, yucas fritas y de sarsa criolla)</div>
+                        </div>
+                        <div class="plato-precio">S/46</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/tjbP39v/0012.png" alt="Chicharrón de langostinos">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Chicharrón de langostinos', 46)">Agregar al pedido</button>
+                </li>
+            </ul>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Pescados Enteros -->
+    <div id="pescados-enteros" class="pantalla">
+        <div class="container">
+            <h2>Pescados Enteros</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cabrilla dorada</div>
+                            <div class="plato-desc">(Servido con arroz, yuca frita y sarsa criolla)</div>
+                        </div>
+                        <div class="plato-precio">S/40</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/Fqj0gdj2/Imagen-de-Whats-App-2025-09-25-a-las-01-12-43-723ade84.jpg" alt="Cabrilla dorada">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Cabrilla dorada', 40)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cabrilla al ajo</div>
+                            <div class="plato-desc">(Servido con arroz, yuca frita y sarsa criolla)</div>
+                        </div>
+                        <div class="plato-precio">S/42</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/PGk394pj/image.png" alt="Cabrilla al ajo">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Cabrilla al ajo', 42)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cabrilla al ajillo</div>
+                            <div class="plato-desc">(Servido con arroz, yuca frita)</div>
+                        </div>
+                        <div class="plato-precio">S/42</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/zWHpF1M5/image.png" alt="Cabrilla al ajillo">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Cabrilla al ajillo', 42)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Cabrilla a lo macho</div>
+                            <div class="plato-desc">(Servido con arroz, yuca frita)</div>
+                        </div>
+                        <div class="plato-precio">S/48</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/Z1L1gzcy/image.png" alt="Cabrilla a lo macho">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Cabrilla a lo macho', 48)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Trucha dorada</div>
+                            <div class="plato-desc">(Servido con arroz, yuca frita y sarsa criolla)</div>
+                        </div>
+                        <div class="plato-precio">S/30</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/hRvg5cJq/image.png" alt="Trucha dorada">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Trucha dorada', 30)">Agregar al pedido</button>
+                </li>
+            </ul>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Sopas y Sudados -->
+    <div id="sopas" class="pantalla">
+        <div class="container">
+            <h2>Sopas y Sudados</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Parihuela</div>
+                        </div>
+                        <div class="plato-precio">S/35</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/V0FJzzJr/image.png" alt="Parihuela">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Parihuela', 35)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Chupe de pescado</div>
+                        </div>
+                        <div class="plato-precio">S/34</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/4RtG0f9Z/image.png" alt="Chupe de pescado">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Chupe de pescado', 34)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Chupe de langostinos</div>
+                        </div>
+                        <div class="plato-precio">S/36</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/G488z3c7/image.png" alt="Chupe de langostinos">        
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Chupe de langostinos', 36)">Agregar al pedido</button>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Sudado de pescado filete</div>
+                        </div>
+                        <div class="plato-precio">S/35</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/TxYMYrR9/image.png" alt="Sudado de pescado filete">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Sudado de pescado filete', 35)">Agregar al pedido</button>
+                </li>
+            </ul>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Platos de Fondo -->
+    <div id="platos-de-fondo" class="pantalla">
+        <div class="container">
+            <h2>Platos de Fondo</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Arroz con mariscos</div>
+                        </div>
+                        <div class="plato-precio">S/32</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/4RyVjXG4/image.png" alt="Arroz con mariscos">      
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Arroz con mariscos', 32)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Arroz con langostinos</div>
+                        </div>
+                        <div class="plato-precio">S/32</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/chgkRn1T/image.png" alt="Arroz con langostinos">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Arroz con langostinos', 32)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Arroz chaufa de mariscos</div>
+                        </div>
+                        <div class="plato-precio">S/32</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/v4kckYVY/image.png" alt="Arroz chaufa de mariscos">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Arroz chaufa de mariscos', 32)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Arroz chaufa de pollo</div>
+                        </div>
+                        <div class="plato-precio">S/28</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/rRwW2KkW/image.png" alt="Arroz chaufa de pollo">
+                    </div>          
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Arroz chaufa de pollo', 28)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Arroz chaufa de carne</div>
+                        </div>
+                        <div class="plato-precio">S/28</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/sdCHFntt/image.png" alt="Arroz chaufa de carne">
+                    </div>          
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Arroz chaufa de carne', 28)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Arroz chaufa de pescado</div>
+                        </div>
+                        <div class="plato-precio">S/30</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/938Kjm8s/unnamed.jpg" alt="Arroz chaufa de pescado">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Arroz chaufa de pescado', 30)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Picante de langostinos</div>
+                        </div>
+                        <div class="plato-precio">S/40</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/tp87D5bj/image.png" alt="Picante de langostinos">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Picante de langostinos', 40)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Pescado a lo macho</div>
+                        </div>
+                        <div class="plato-precio">S/38</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/Kz5WhMjm/Imagen-de-Whats-App-2025-10-15-a-las-21-38-12-01c442b7.jpg" alt="Pescado a lo macho">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Pescado a lo macho', 38)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Filete en salsa de langostinos</div>
+                        </div>
+                        <div class="plato-precio">S/38</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/NgLY2wWz/image.png" alt="Filete en salsa de langostinos">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Filete en salsa de langostinos', 38)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Filete de pescado a la plancha /o frito</div>
+                        </div>
+                        <div class="plato-precio">S/30</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/GvfGWzqN/image.png" alt="Filete de pescado">
+                    </div>
+                   <button class="btn-agregar" onclick="abrirModalPersonalizacion('Filete de pescado', 30, ['Plancha', 'Frito'])">Agregar al pedido</button>
+                   </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Saltado de (Cuadril / Pollo)</div>
+                        </div>
+                        <div class="plato-precio">S/30</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/YBk7k47D/image.png" alt="Saltado">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Saltado', 30, ['Cuadril', 'Pollo'])">Agregar al pedido</button>
+                </li>     
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Lomo fino saltado</div>
+                        </div>
+                        <div class="plato-precio">S/40</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/gbD49FDV/image.png" alt="Lomo fino saltado">   
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Lomo fino saltado', 40)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Bisteck a lo pobre</div>
+                        </div>
+                        <div class="plato-precio">S/36</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/pj9jwsmx/image.png" alt="Bisteck a lo pobre">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Bisteck a lo pobre', 36)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Pollo a la plancha con arroz y papas fritas</div>
+                        </div>
+                        <div class="plato-precio">S/30</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/8LMGcYNP/image.png" alt="Pollo a la plancha">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Pollo a la plancha con arroz y papas fritas', 30)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Fetuccini a la huancaina c/ ( Cuadril / pollo )</div>
+                        </div>
+                        <div class="plato-precio">S/35</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/J6cLW9d/imagen-2025-12-04-003128904.png" alt="Fetuccini a la huancaina">
+                    </div>
+                    <button class="btn-agregar" onclick="abrirModalPersonalizacion('Fetuccini a la huancaina con', 35, ['Cuadril', 'Pollo'])">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Fetuccini a la huancaina c/ lomo fino saltado</div>
+                        </div>
+                        <div class="plato-precio">S/40</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/6JvkW73R/image.png" alt="Fetuccini a la huancaina con lomo">
+                    </div>
+                     <button class="btn-agregar" onclick="agregarAlCarrito('Fetuccini a la huancaina con lomo fino', 40)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Fetuccini con Langostinos</div>
+                        </div>
+                        <div class="plato-precio">S/32</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/3YBcgQpj/image.png" alt="Fetuccini con Langostinos">      
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Fetuccini con Langostinos', 32)">Agregar al pedido</button>
+                </li>
+            </ul>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sección de guardiciones -->
+    <div id="guardiciones" class="pantalla">
+        <div class="container">
+            <h2>GUARDICIONES</h2>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Porción de arroz</div>
+                        </div>
+                        <div class="plato-precio">S/6</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/FqHQdDvv/image.png" alt="Arroz">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Porción de Arroz', 6)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Chifles</div>
+                        </div>
+                        <div class="plato-precio">S/6</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/Lh5g8Hnh/unnamed.png" alt="Chifles">          
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Chifles', 6)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Choclo</div>
+                        </div>
+                        <div class="plato-precio">S/6</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/1GCHD43b/image.png" alt="Choclo">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Choclo', 6)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Canchita</div>
+                        </div>
+                        <div class="plato-precio">S/6</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/HDSXQPHM/unnamed.png" alt="Canchita">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Canchita', 6)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Yucas Fritas / Sancochadas</div>
+                        </div>
+                        <div class="plato-precio">S/6</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/4Z8pSVyL/image.png" alt="Yucas">     
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Yucas Fritas/Sancochadas', 6)">Agregar al pedido</button>
+                </li>
+                
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Yuyo frito / sancochado</div>
+                        </div>
+                        <div class="plato-precio">S/6</div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/8nZpmfBq/image.png" alt="Yuyo">
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Yuyo frito/sancochado', 6)">Agregar al pedido</button>
+                </li>
+            </ul>
+
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Bebidas -->
+    <div id="bebidas" class="pantalla">
+        <div class="container">
+            <h2>Bebidas</h2>
+            
+            <div class="info-pedidos">
+                <p class="horario">Horario: 11:00 am - 5:00 pm</p>
+            </div>
+            
+            <ul class="plato-lista">
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Chicha Morada</div>
+                            <div class="plato-desc">Refrescante bebida de maíz morado</div>
+                        </div>
+                        <div class="precio-doble">
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Litro</span>
+                                <span class="precio-valor">S/10</span>
+                            </div>
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Copa (500ml)</span>
+                                <span class="precio-valor">S/6</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/kVTSk7ct/image.png" alt="Chicha Morada">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Chicha Morada - Litro', 10)">Litro</button>
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Chicha Morada - Copa', 6)">Copa</button>
+                    </div>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Limonada</div>
+                            <div class="plato-desc">Natural o frozen</div>
+                        </div>
+                        <div class="precio-doble">
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Litro</span>
+                                <span class="precio-valor">S/16</span>
+                            </div>
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Copa (500ml)</span>
+                                <span class="precio-valor">S/8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/WNHk15YQ/image.png" alt="Limonada">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Limonada - Litro', 16)">Litro</button>
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Limonada - Copa', 8)">Copa</button>
+                    </div>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Limonada frozen</div>
+                        </div>
+                        <div class="precio-doble">
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Litro</span>
+                                <span class="precio-valor">S/10</span>
+                            </div>
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Copa (500ml)</span>
+                                <span class="precio-valor">S/9</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/8DR0Ff0G/image.png" alt="Limonada frozen">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Limonada frozen - Litro', 10)">Litro</button>
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Limonada frozen - Copa', 9)">Copa</button>
+                    </div>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Maracuyá</div>
+                        </div>
+                        <div class="precio-doble">
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Litro</span>
+                                <span class="precio-valor">S/16</span>
+                            </div>
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Copa (500ml)</span>
+                                <span class="precio-valor">S/8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/7N1NRkSH/image.png" alt="Maracuyá">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Maracuyá - Litro', 16)">Litro</button>
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Maracuyá - Copa', 8)">Copa</button>
+                    </div>
+                </li>
+                <li class="plato-item">
+                    <div class="plato-info">
+                        <div class="plato-texto">
+                            <div class="plato-nombre">Maracuyá Frozen</div>
+                        </div>
+                        <div class="precio-doble">
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Litro</span>
+                                <span class="precio-valor">S/18</span>
+                            </div>
+                            <div class="precio-opcion">
+                                <span class="precio-tipo">Copa (500ml)</span>
+                                <span class="precio-valor">S/9</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plato-imagen">
+                        <img src="https://i.ibb.co/jvXQBSZ0/image.png" alt="Maracuyá Frozen">      
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Maracuyá Frozen - Litro', 18)">Litro</button>
+                        <button class="btn-agregar" onclick="agregarAlCarrito('Maracuyá Frozen - Copa', 9)">Copa</button>
+                    </div>
+                </li>
+            </ul>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-regresar" onclick="mostrarPantalla('menu')">
+                    Volver al Menú
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="info-pedidos">
+            <p class="horario">Atendemos de 11:00 am - 5:00 pm</p>
+        </div>
+        <p>Cevichería Tipos &copy; 2025 - Todos los derechos reservados</p>
+        <p>CREADO POR JJRY</p>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ================================================
+        // VARIABLES GLOBALES
+        // ================================================
+        let carrito = JSON.parse(localStorage.getItem('carritoTipos')) || [];
+        let platoActual = null;
+        let precioActual = 0;
+        let opcionesSeleccionadas = {};
+        let opcionesModal = [];
+        let metodoPagoSeleccionado = 'efectivo';
+
+        // ================================================
+        // FUNCIONES DE NAVEGACIÓN
+        // ================================================
+        function mostrarPantalla(id) {
+            document.querySelectorAll('.pantalla').forEach(p => {
+                p.classList.remove('activa');
+            });
+            document.getElementById(id).classList.add('activa');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ================================================
+        // FUNCIONES DEL CARRITO
+        // ================================================
+    function agregarAlCarrito(nombre, precio, especificaciones = '') {
+    const itemExistente = carrito.find(item => 
+        item.nombre === nombre && item.especificaciones === especificaciones
+    );
+    
+    if (itemExistente) {
+        itemExistente.cantidad += 1;
+    } else {
+        carrito.push({
+            nombre: nombre,
+            precio: precio,
+            cantidad: 1,
+            especificaciones: especificaciones
+        });
+    }
+    
+    actualizarCarrito();
+    mostrarNotificacionAgregado(nombre); // ← Nueva notificación visual
+}
+function mostrarNotificacionAgregado(nombre) {
+    const notificacion = document.createElement('div');
+    notificacion.id = 'notificacion-agregado';
+    notificacion.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: var(--VERDE);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+        font-weight: 600;
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    `;
+    notificacion.innerHTML = `
+        <span style="font-size: 1.2rem;">✅</span>
+        <span>${nombre} agregado</span>
+    `;
+    
+    document.body.appendChild(notificacion);
+    
+    // Animación de entrada
+    setTimeout(() => {
+        notificacion.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Auto-ocultar después de 2 segundos
+    setTimeout(() => {
+        notificacion.style.transform = 'translateX(120%)';
+        setTimeout(() => {
+            if (notificacion.parentNode) {
+                notificacion.parentNode.removeChild(notificacion);
+            }
+        }, 300);
+    }, 2000);
+}
+        function actualizarCarrito() {
+            const carritoItems = document.getElementById('carrito-items');
+            const carritoVacio = document.getElementById('carrito-vacio');
+            const carritoResumen = document.getElementById('carrito-resumen');
+            const carritoBotones = document.getElementById('carrito-botones');
+            const sugerenciasContainer = document.getElementById('sugerencias-container');
+            const carritoContador = document.getElementById('carrito-contador');
+            const subtotalCarrito = document.getElementById('subtotal-carrito');
+            const totalCarrito = document.getElementById('total-carrito');
+            const envioCarrito = document.getElementById('envio-carrito');
+            
+            const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
+            carritoContador.textContent = totalItems;
+            
+            if (carrito.length === 0) {
+                carritoVacio.style.display = 'block';
+                carritoItems.innerHTML = '';
+                carritoResumen.style.display = 'none';
+                carritoBotones.style.display = 'none';
+                sugerenciasContainer.style.display = 'none';
+            } else {
+                carritoVacio.style.display = 'none';
+                carritoResumen.style.display = 'block';
+                carritoBotones.style.display = 'flex';
+                
+                let html = '';
+                let subtotal = 0;
+                
+                carrito.forEach((item, index) => {
+                    const subtotalItem = item.precio * item.cantidad;
+                    subtotal += subtotalItem;
+                    
+                    html += `
+                        <div class="carrito-item">
+                            <div class="carrito-item-imagen">
+                                <img src="${obtenerImagenPlato(item.nombre)}" alt="${item.nombre}">
+                            </div>
+                            <div class="carrito-item-info">
+                                <div class="carrito-item-nombre">${item.nombre}</div>
+                                ${item.especificaciones ? `<div class="especificaciones-carrito">${item.especificaciones}</div>` : ''}
+                                <div class="carrito-item-precio">S/ ${item.precio.toFixed(2)} c/u</div>
+                            </div>
+                            <div class="carrito-item-cantidad">
+                                <button class="cantidad-btn restar" onclick="modificarCantidad(${index}, -1)">-</button>
+                                <span class="carrito-cantidad-numero">${item.cantidad}</span>
+                                <button class="cantidad-btn" onclick="modificarCantidad(${index}, 1)">+</button>
+                            </div>
+                            <div class="carrito-item-subtotal">S/ ${subtotalItem.toFixed(2)}</div>
+                            <button class="carrito-item-eliminar" onclick="eliminarDelCarrito(${index})">✕</button>
+                        </div>
+                    `;
+                });
+                
+                carritoItems.innerHTML = html;
+                subtotalCarrito.textContent = `S/ ${subtotal.toFixed(2)}`;
+                envioCarrito.textContent = 'S/ 0.00';
+                totalCarrito.textContent = `S/ ${subtotal.toFixed(2)}`;
+                
+                mostrarSugerencias();
+            }
+            
+            localStorage.setItem('carritoTipos', JSON.stringify(carrito));
+        }
+
+      function obtenerImagenPlato(nombre) {
+    const imagenes = {
+        'tequeños': 'https://i.ibb.co/cStD29b9/imagen-2025-08-25-131616548.png',
+        'causa': 'https://i.ibb.co/nM0bdHD1/image.png',
+        'poderoso': 'https://i.ibb.co/zVb5bCD5/image.png',
+        'leche de tigre': 'https://i.ibb.co/ZzchbZnF/image.png',
+        'leche de pantera': 'https://i.ibb.co/0jrJRSXN/image.png',
+        'cebiche': 'https://i.ibb.co/PZZWqx0D/image.png',
+        'tiradito': 'https://i.ibb.co/d49T9mHp/image.png',
+        'combinado': 'https://i.ibb.co/TBYr5rL0/image.png',
+        'doble marino': 'https://i.ibb.co/JjkMv1yy/image.png',
+        'triple marino': 'https://i.ibb.co/mChfcMLv/image.png',
+        'ronda marina': 'https://i.ibb.co/HDdfj5wP/image.png',
+        'jalea': 'https://i.ibb.co/pjqZqGwy/image.png',
+        'chicharrón': 'https://i.ibb.co/vvR6B9Hg/image.png',
+        'cabrilla': 'https://i.ibb.co/Fqj0gdj2/Imagen-de-Whats-App-2025-09-25-a-las-01-12-43-723ade84.jpg',
+        'trucha': 'https://i.ibb.co/hRvg5cJq/image.png',
+        'parihuela': 'https://i.ibb.co/V0FJzzJr/image.png',
+        'chupe': 'https://i.ibb.co/4RtG0f9Z/image.png',
+        'sudado': 'https://i.ibb.co/TxYMYrR9/image.png',
+        'arroz con mariscos': 'https://i.ibb.co/4RyVjXG4/image.png',
+        'arroz chaufa': 'https://i.ibb.co/v4kckYVY/image.png',
+        'picante': 'https://i.ibb.co/tp87D5bj/image.png',
+        'pescado a lo macho': 'https://i.ibb.co/Kz5WhMjm/Imagen-de-Whats-App-2025-10-15-a-las-21-38-12-01c442b7.jpg',
+        'filete': 'https://i.ibb.co/GvfGWzqN/image.png',
+        'saltado': 'https://i.ibb.co/YBk7k47D/image.png',
+        'lomo fino': 'https://i.ibb.co/gbD49FDV/image.png',
+        'bisteck': 'https://i.ibb.co/pj9jwsmx/image.png',
+        'pollo': 'https://i.ibb.co/8LMGcYNP/image.png',
+        'fetuccini': 'https://i.ibb.co/6JvkW73R/image.png',
+        'arroz': 'https://i.ibb.co/FqHQdDvv/image.png',
+        'chifles': 'https://i.ibb.co/Lh5g8Hnh/unnamed.png',
+        'choclo': 'https://i.ibb.co/1GCHD43b/image.png',
+        'canchita': 'https://i.ibb.co/HDSXQPHM/unnamed.png',
+        'yucas': 'https://i.ibb.co/4Z8pSVyL/image.png',
+        'yuyo': 'https://i.ibb.co/8nZpmfBq/image.png',
+        'chicha': 'https://i.ibb.co/kVTSk7ct/image.png',
+        'limonada': 'https://i.ibb.co/WNHk15YQ/image.png',
+        'maracuyá': 'https://i.ibb.co/7N1NRkSH/image.png'
+    };
+    
+    const nombreLimpio = nombre.toLowerCase();
+    
+    // Primero busca coincidencia exacta
+    for (const [key, value] of Object.entries(imagenes)) {
+        if (nombreLimpio.includes(key)) {
+            return value;
+        }
+    }
+    
+    // Si no encuentra, usa estas categorías generales
+    if (nombreLimpio.includes('cebiche') || nombreLimpio.includes('tiradito')) {
+        return 'https://i.ibb.co/PZZWqx0D/image.png';
+    }
+    if (nombreLimpio.includes('arroz') || nombreLimpio.includes('chaufa')) {
+        return 'https://i.ibb.co/4RyVjXG4/image.png';
+    }
+    if (nombreLimpio.includes('pescado') || nombreLimpio.includes('cabrilla')) {
+        return 'https://i.ibb.co/Fqj0gdj2/Imagen-de-Whats-App-2025-09-25-a-las-01-12-43-723ade84.jpg';
+    }
+    if (nombreLimpio.includes('chicha') || nombreLimpio.includes('limonada') || nombreLimpio.includes('maracuyá')) {
+        return 'https://i.ibb.co/kVTSk7ct/image.png';
+    }
+    
+    // Imagen por defecto
+    return 'https://i.ibb.co/mCgLnpH8/imagen-2025-08-22-005748205.png';
+}
+        function mostrarSugerencias() {
+            const sugerenciasContainer = document.getElementById('sugerencias-container');
+            const sugerenciasGrid = document.querySelector('.sugerencias-grid');
+            
+            const tieneAcompañamientos = carrito.some(item => 
+                item.nombre.includes('Arroz') || 
+                item.nombre.includes('Chifles') || 
+                item.nombre.includes('Choclo') || 
+                item.nombre.includes('Canchita') ||
+                item.nombre.includes('Yucas')
+            );
+            
+            const tieneBebidas = carrito.some(item => 
+                item.nombre.includes('Chicha') || 
+                item.nombre.includes('Limonada') || 
+                item.nombre.includes('Maracuyá')
+            );
+            
+            if (!tieneAcompañamientos || !tieneBebidas) {
+                sugerenciasContainer.style.display = 'block';
+                
+                let sugerenciasHTML = '';
+                const sugerencias = [];
+                
+          if (!tieneAcompañamientos) {
+    sugerencias.push(
+        {
+            nombre: 'Porción de Arroz', 
+            precio: 6, 
+            categoria: 'acompañamiento',
+            imagen: 'https://i.ibb.co/FqHQdDvv/image.png'  // URL de imagen del arroz
+        },
+        {
+            nombre: 'Chifles', 
+            precio: 6, 
+            categoria: 'acompañamiento',
+            imagen: 'https://i.ibb.co/Lh5g8Hnh/unnamed.png'  // URL de imagen de chifles
+        }
+    );
+}
+                
+              if (!tieneBebidas) {
+    sugerencias.push(
+        {
+            nombre: 'Chicha Morada - 1 Litro', 
+            precio: 16, 
+            categoria: 'bebida',
+            imagen: 'https://i.ibb.co/kVTSk7ct/image.png'  // URL de chicha morada
+        },
+        {
+            nombre: 'Limonada - 1 Litro', 
+            precio: 16, 
+            categoria: 'bebida',
+            imagen: 'https://i.ibb.co/WNHk15YQ/image.png'  // URL de limonada
+        },
+        {
+            nombre: 'Maracuyá - 1 Litro', 
+            precio: 16, 
+            categoria: 'bebida',
+            imagen: 'https://i.ibb.co/7N1NRkSH/image.png'  // URL de maracuyá
+        }
+    );
+}
+                
+                const tieneCebiche = carrito.some(item => 
+                    item.nombre.toLowerCase().includes('cebiche')
+                );
+                
+              if (tieneCebiche && !carrito.some(item => item.nombre.includes('Leche de tigre'))) {
+    sugerencias.push(
+        {
+            nombre: 'Leche de tigre', 
+            precio: 16, 
+            categoria: 'entrada',
+            imagen: 'https://i.ibb.co/ZzchbZnF/image.png'  // URL de leche de tigre
+        }
+    );
+}
+                
+       sugerencias.forEach((sugerencia) => {
+    sugerenciasHTML += `
+        <div class="sugerencia-item" onclick="agregarSugerencia('${sugerencia.nombre}', ${sugerencia.precio}, event)">
+            <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
+                <img src="${sugerencia.imagen}" alt="${sugerencia.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="sugerencia-info">
+                <div class="sugerencia-nombre">${sugerencia.nombre}</div>
+                <div class="sugerencia-precio">S/ ${sugerencia.precio.toFixed(2)}</div>
+            </div>
+        </div>
+    `;
+});
+                sugerenciasGrid.innerHTML = sugerenciasHTML;
+            } else {
+                sugerenciasContainer.style.display = 'none';
+            }
+        }
+
+    
+   function agregarSugerencia(nombre, precio, event) {
+    // Previene comportamientos no deseados
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    agregarAlCarrito(nombre, precio);
+    
+    // Usa el evento pasado como parámetro
+    const sugerenciaItem = event ? event.target.closest('.sugerencia-item') : null;
+    
+    if (sugerenciaItem) {
+        sugerenciaItem.style.background = 'var(--verde-claro)';
+        sugerenciaItem.style.borderColor = 'var(--VERDE)';
+        sugerenciaItem.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.8rem; width: 100%;">
+                <div style="color: var(--VERDE); font-size: 1.5rem;">✓</div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--VERDE);">¡Agregado!</div>
+                    <div style="font-size: 0.9rem; color: #666;">${nombre}</div>
+                </div>
+            </div>
+        `;
+        
+        setTimeout(() => {
+            mostrarSugerencias();
+        }, 1500);
+    }
+}
+        function vaciarCarrito() {
+    if (carrito.length === 0) return;
+    
+    // Mostrar confirmación visual en lugar de alerta molesta
+    const botonVaciar = event.target;
+    const textoOriginal = botonVaciar.textContent;
+    
+    // Cambiar texto del botón
+    botonVaciar.textContent = '¿Seguro?';
+    botonVaciar.style.background = 'var(--ROJO)';
+    botonVaciar.style.color = 'white';
+    
+    // Si hace clic de nuevo en 3 segundos, vaciar
+    setTimeout(() => {
+        botonVaciar.textContent = textoOriginal;
+        botonVaciar.style.background = '';
+        botonVaciar.style.color = '';
+    }, 3000);
+    
+    // Guardar referencia al primer clic
+    botonVaciar.dataset.clicked = 'true';
+    
+    // Si ya había hecho clic antes, ejecutar vaciado
+    if (botonVaciar.dataset.alreadyClicked === 'true') {
+        carrito = [];
+        actualizarCarrito();
+        botonVaciar.textContent = textoOriginal;
+        botonVaciar.style.background = '';
+        botonVaciar.style.color = '';
+        botonVaciar.dataset.alreadyClicked = 'false';
+    } else {
+        botonVaciar.dataset.alreadyClicked = 'true';
+    }
+}
+        // ================================================
+        // FUNCIONES DEL MODAL DE PERSONALIZACIÓN
+        // ================================================
+        function abrirModalPersonalizacion(nombre, precio, opciones) {
+            platoActual = nombre;
+            precioActual = precio;
+            opcionesModal = opciones || [];
+            opcionesSeleccionadas = {};
+            
+            document.getElementById('titulo-personalizacion').textContent = `Personaliza: ${nombre}`;
+            document.getElementById('especificaciones-personalizacion').value = '';
+            
+            const opcionesContainer = document.getElementById('opciones-container');
+            opcionesContainer.innerHTML = '';
+            
+ if (opcionesModal.length > 0) {
+    const categorias = {
+        ' Picante': {opciones: ['Sin ají', 'Poco ají', 'Picante'], emojis: ['🚫', '🌶️', '🔥']},
+        ' Cocción': {opciones: ['Plancha', 'Frito', 'Al vapor'], emojis: ['🍳', '🍟', '💨']},
+        ' Tipo': {opciones: ['Cuadril', 'Pollo', 'Carne', 'Pescado', 'Mariscos'], emojis: ['🥩', '🍗', '🥩', '🐟', '🦐']},
+        ' Chaufa': {opciones: ['Chaufa de Pescado', 'Chaufa de Mariscos'], emojis: ['🐟', '🦐']},
+        ' Básicos': {opciones: ['Sin cebolla', 'Sin choclo', 'Extra picante'], emojis: ['🚫', '🌽', '🌶️']}
+    };
+    
+    Object.keys(categorias).forEach(categoriaNombre => {
+        const categoria = categorias[categoriaNombre];
+        const mostrarCategoria = opcionesModal.some(opcion => 
+            categoria.opciones.some(opcionCat => 
+                opcion.toLowerCase().includes(opcionCat.toLowerCase())
+            )
+        );
+        
+        if (mostrarCategoria) {
+            // Crear sección separada
+            const seccion = document.createElement('div');
+            seccion.style.marginBottom = '25px';
+            seccion.style.paddingBottom = '15px';
+            seccion.style.borderBottom = '2px solid var(--gris-claro)';
+            
+            // Título de sección
+            const tituloCategoria = document.createElement('div');
+            tituloCategoria.style.fontSize = '1rem';
+            tituloCategoria.style.fontWeight = '700';
+            tituloCategoria.style.color = 'var(--VERDE)';
+            tituloCategoria.style.marginBottom = '12px';
+            tituloCategoria.textContent = categoriaNombre;
+            
+            // Descripción
+            const descripcion = document.createElement('div');
+            descripcion.style.fontSize = '0.85rem';
+            descripcion.style.color = '#666';
+            descripcion.style.marginBottom = '15px';
+            descripcion.style.fontStyle = 'italic';
+            
+            if (categoriaNombre.includes('Picante')) {
+                descripcion.textContent = '¿Cómo te gusta el picante?';
+            } else if (categoriaNombre.includes('Cocción')) {
+                descripcion.textContent = 'Selecciona cómo lo quieres cocinado:';
+            } else if (categoriaNombre.includes('Tipo')) {
+                descripcion.textContent = 'Selecciona el tipo de carne:';
+            } else if (categoriaNombre.includes('Chaufa')) {
+                descripcion.textContent = 'Selecciona el tipo de chaufa:';
+            } else {
+                descripcion.textContent = 'Indicaciones especiales:';
+            }
+            
+            // Contenedor de opciones
+            const opcionesContainerCat = document.createElement('div');
+            opcionesContainerCat.style.display = 'flex';
+            opcionesContainerCat.style.gap = '10px';
+            opcionesContainerCat.style.flexWrap = 'wrap';
+            
+            categoria.opciones.forEach((opcion, index) => {
+                if (opcionesModal.some(op => op.toLowerCase().includes(opcion.toLowerCase()))) {
+                    const opcionElement = document.createElement('div');
+                    opcionElement.className = 'opcion-personalizacion';
+                    opcionElement.dataset.categoria = categoriaNombre.split(' ')[1] || categoriaNombre;
+                    
+                    // Si hay emoji para esta opción, lo mostramos
+                    const emoji = categoria.emojis && categoria.emojis[index] ? categoria.emojis[index] : '';
+                    
+                    opcionElement.style.flex = '1';
+                    opcionElement.style.minWidth = '100px';
+                    opcionElement.style.padding = '12px 8px';
+                    opcionElement.style.textAlign = 'center';
+                    opcionElement.style.display = 'flex';
+                    opcionElement.style.flexDirection = 'column';
+                    opcionElement.style.alignItems = 'center';
+                    opcionElement.style.gap = '5px';
+                    
+                    opcionElement.innerHTML = `
+                        ${emoji ? `<div style="font-size: 1.3rem;">${emoji}</div>` : ''}
+                        <div style="font-weight: 600; font-size: 0.9rem;">${opcion}</div>
+                    `;
+                    
+                    opcionElement.onclick = () => seleccionarOpcionPersonalizacion(opcionElement, opcion, categoriaNombre.split(' ')[1] || categoriaNombre);
+                    opcionesContainerCat.appendChild(opcionElement);
+                }
+            });
+            
+            // Agregar elementos a la sección
+            seccion.appendChild(tituloCategoria);
+            seccion.appendChild(descripcion);
+            seccion.appendChild(opcionesContainerCat);
+            opcionesContainer.appendChild(seccion);
+        }
+    });
+    
+    // Si no se mostró ninguna categoría, mostrar opciones generales
+    if (opcionesContainer.children.length === 0) {
+        mostrarOpcionesGenerales();
+    }
+} else {
+    mostrarOpcionesGenerales();
+}
+            
+            document.getElementById('modal-personalizacion').style.display = 'flex';
+        }
+
+        function mostrarOpcionesGenerales() {
+            const opcionesContainer = document.getElementById('opciones-container');
+            const opcionesGenerales = [
+                {categoria: 'Picante', opciones: ['Sin ají', 'Poco ají', 'Picante']},
+                {categoria: 'Básicos', opciones: ['Sin cebolla', 'Sin choclo', 'Extra picante']}
+            ];
+            
+            opcionesGenerales.forEach(grupo => {
+                const tituloCategoria = document.createElement('div');
+                tituloCategoria.className = 'categoria-titulo';
+                tituloCategoria.textContent = `${grupo.categoria}:`;
+                opcionesContainer.appendChild(tituloCategoria);
+                
+                grupo.opciones.forEach(opcion => {
+                    const opcionElement = document.createElement('div');
+                    opcionElement.className = 'opcion-personalizacion';
+                    opcionElement.dataset.categoria = grupo.categoria;
+                    opcionElement.textContent = opcion;
+                    opcionElement.onclick = () => seleccionarOpcionPersonalizacion(opcionElement, opcion, grupo.categoria);
+                    opcionesContainer.appendChild(opcionElement);
+                });
+            });
+        }
+
+        function seleccionarOpcionPersonalizacion(elemento, opcion, categoria) {
+            const opcionesMismaCategoria = document.querySelectorAll(`.opcion-personalizacion[data-categoria="${categoria}"]`);
+            opcionesMismaCategoria.forEach(el => {
+                el.classList.remove('seleccionado');
+            });
+            
+            elemento.classList.add('seleccionado');
+            opcionesSeleccionadas[categoria] = opcion;
+        }
+
+  function confirmarPersonalizacion() {
+    if (!platoActual || !precioActual) {
+        alert('Error: No hay plato seleccionado');
+        return;
+    }
+    
+    // VERIFICACIÓN PARA COMBINADOS CON CHAUFA
+    const esCombinadoConChaufa = 
+        platoActual.includes('chaufa') || 
+        platoActual.includes('Chaufa') || 
+        platoActual.includes('Doble Marino') || 
+        platoActual.includes('Triple Marino') || 
+        platoActual.includes('Ronda Marina');
+    
+    // Si es un combinado con chaufa, verificar que se haya seleccionado el tipo
+    if (esCombinadoConChaufa && (!opcionesSeleccionadas['Chaufa'] || opcionesSeleccionadas['Chaufa'].trim() === '')) {
+        alert('⚠ Por favor, selecciona el tipo de chaufa:\n• Chaufa de Pescado\n• Chaufa de Mariscos');
+        return;
+    }
+    
+    // VERIFICACIÓN PARA PLATOS QUE REQUIEREN NIVEL DE AJÍ
+    const requiereNivelAji = 
+        platoActual.includes('Cebiche') || 
+        platoActual.includes('cebiche') ||
+        platoActual.includes('Tiradito') ||
+        platoActual.includes('tiradito') ||
+        platoActual.includes('Leche de') ||
+        platoActual.includes('Combinado') ||
+        platoActual.includes('Triple') ||
+        platoActual.includes('Ronda');
+    
+    if (requiereNivelAji && (!opcionesSeleccionadas['Picante'] || opcionesSeleccionadas['Picante'].trim() === '')) {
+        alert('⚠ Por favor, selecciona el nivel de ají:\n• Sin ají\n• Poco ají\n• Picante');
+        return;
+    }
+    
+    const especificacionesInput = document.getElementById('especificaciones-personalizacion').value;
+    let opcionesTexto = '';
+    
+    const opcionesArray = Object.values(opcionesSeleccionadas);
+    if (opcionesArray.length > 0) {
+        opcionesTexto = opcionesArray.join(', ');
+    }
+    
+    let personalizacionTexto = '';
+    if (opcionesTexto && especificacionesInput) {
+        personalizacionTexto = `${opcionesTexto} | ${especificacionesInput}`;
+    } else if (opcionesTexto) {
+        personalizacionTexto = opcionesTexto;
+    } else if (especificacionesInput) {
+        personalizacionTexto = especificacionesInput;
+    }
+    
+    agregarAlCarrito(platoActual, precioActual, personalizacionTexto);
+    cerrarModalPersonalizacion();
+}
+        function cerrarModalPersonalizacion() {
+            document.getElementById('modal-personalizacion').style.display = 'none';
+            platoActual = null;
+            precioActual = 0;
+            opcionesSeleccionadas = {};
+            opcionesModal = [];
+        }
+
+        // ================================================
+        // FUNCIONES PARA EL FORMULARIO DE PEDIDO
+        // ================================================
+        function mostrarFormularioPedido() {
+            if (carrito.length === 0) {
+                alert('✗ Tu carrito está vacío');
+                return;
+            }
+            
+            cerrarCarrito();
+            actualizarResumenPedido();
+            resetearFormularioPedido();
+            
+            document.getElementById('modal-formulario-pedido').style.display = 'block';
+        }
+
+        function cerrarFormularioPedido() {
+            document.getElementById('modal-formulario-pedido').style.display = 'none';
+            limpiarErrores();
+        }
+
+        function actualizarResumenPedido() {
+            const detallesResumen = document.getElementById('detalles-resumen');
+            const subtotalElement = document.getElementById('subtotal-pedido');
+            
+            let html = '';
+            let subtotal = 0;
+            
+            carrito.forEach(item => {
+                const itemTotal = item.precio * item.cantidad;
+                subtotal += itemTotal;
+                
+                html += `
+                    <div style="margin-bottom: 5px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>${item.cantidad} x ${item.nombre}</span>
+                            <span>S/ ${itemTotal.toFixed(2)}</span>
+                        </div>
+                        ${item.especificaciones ? `<div style="font-size: 0.8rem; color: #666; padding-left: 1rem;">→ ${item.especificaciones}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            detallesResumen.innerHTML = html;
+            subtotalElement.textContent = `S/ ${subtotal.toFixed(2)}`;
+            
+            actualizarTotalPedido();
+        }
+
+        function actualizarTotalPedido() {
+            const subtotalElement = document.getElementById('subtotal-pedido');
+            const totalElement = document.getElementById('total-pedido');
+            const costoDeliveryElement = document.getElementById('costo-delivery');
+            
+            const subtotalText = subtotalElement.textContent.replace('S/ ', '');
+            const subtotal = parseFloat(subtotalText) || 0;
+            
+            let delivery = 0;
+            const seccionDelivery = document.getElementById('seccion-delivery');
+            if (seccionDelivery.style.display === 'block') {
+                const distritoSelect = document.getElementById('cliente-distrito');
+                if (distritoSelect.value) {
+                    const match = distritoSelect.value.match(/S\/\s*(\d+)/);
+                    if (match) {
+                        delivery = parseInt(match[1]);
+                    }
+                }
+            }
+            
+            const total = subtotal + delivery;
+            
+            totalElement.textContent = `S/ ${total.toFixed(2)}`;
+            costoDeliveryElement.textContent = `S/ ${delivery.toFixed(2)}`;
+            
+            const totalRecordatorio = document.getElementById('total-recordatorio');
+            if (totalRecordatorio) {
+                totalRecordatorio.textContent = `S/ ${total.toFixed(2)}`;
+            }
+        }
+
+        function resetearFormularioPedido() {
+            document.getElementById('cliente-nombre').value = '';
+            document.getElementById('cliente-telefono').value = '';
+            document.getElementById('cliente-direccion').value = '';
+            document.getElementById('cliente-distrito').value = '';
+            document.getElementById('instrucciones').value = '';
+            document.getElementById('monto-efectivo').value = '';
+            
+            seleccionarTipoPedido('recoger');
+            seleccionarMetodoPago('efectivo');
+            limpiarErrores();
+        }
+
+        function seleccionarTipoPedido(tipo) {
+            const btnDelivery = document.getElementById('btn-delivery');
+            const btnRecoger = document.getElementById('btn-recoger');
+            const seccionDelivery = document.getElementById('seccion-delivery');
+            
+            if (tipo === 'delivery') {
+                btnDelivery.style.background = 'var(--VERDE)';
+                btnDelivery.style.color = 'white';
+                btnRecoger.style.background = 'var(--gris-claro)';
+                btnRecoger.style.color = '#333';
+                seccionDelivery.style.display = 'block';
+                actualizarTotalPedido();
+            } else {
+                btnRecoger.style.background = 'var(--VERDE)';
+                btnRecoger.style.color = 'white';
+                btnDelivery.style.background = 'var(--gris-claro)';
+                btnDelivery.style.color = '#333';
+                seccionDelivery.style.display = 'none';
+                document.getElementById('costo-delivery').textContent = 'S/ 0.00';
+                actualizarTotalPedido();
+            }
+        }
+
+        function seleccionarMetodoPago(metodo) {
+            metodoPagoSeleccionado = metodo;
+            
+            document.querySelectorAll('.metodo-pago-opcion').forEach(el => {
+                el.classList.remove('seleccionado');
+            });
+            
+            const opciones = document.querySelectorAll('.metodo-pago-opcion');
+            if (metodo === 'efectivo') opciones[0].classList.add('seleccionado');
+            if (metodo === 'yape') opciones[1].classList.add('seleccionado');
+            if (metodo === 'plin') opciones[2].classList.add('seleccionado');
+            if (metodo === 'tarjeta') opciones[3].classList.add('seleccionado');
+            
+            document.getElementById('campo-efectivo').style.display = 'none';
+            document.getElementById('campo-yape').style.display = 'none';
+            document.getElementById('campo-plin').style.display = 'none';
+            document.getElementById('campo-tarjeta').style.display = 'none';
+            
+            if (metodo === 'efectivo') {
+                document.getElementById('campo-efectivo').style.display = 'block';
+            } else if (metodo === 'yape') {
+                document.getElementById('campo-yape').style.display = 'block';
+            } else if (metodo === 'plin') {
+                document.getElementById('campo-plin').style.display = 'block';
+            } else if (metodo === 'tarjeta') {
+                document.getElementById('campo-tarjeta').style.display = 'block';
+            }
+            
+            limpiarErrores();
+        }
+
+        function actualizarCostoDelivery() {
+            actualizarTotalPedido();
+        }
+
+        function calcularVuelto() {
+            const montoEfectivo = parseFloat(document.getElementById('monto-efectivo').value) || 0;
+            const totalPedido = parseFloat(document.getElementById('total-pedido').textContent.replace('S/ ', '')) || 0;
+            const vueltoInfo = document.getElementById('vuelto-info');
+            const montoVuelto = document.getElementById('monto-vuelto');
+            const vueltoTexto = document.getElementById('vuelto-texto');
+            const advertenciaFalta = document.getElementById('advertencia-falta');
+            
+            if (montoEfectivo > 0) {
+                const vuelto = montoEfectivo - totalPedido;
+                
+                if (vuelto >= 0) {
+                    vueltoTexto.textContent = 'Vuelto:';
+                    montoVuelto.textContent = `S/ ${vuelto.toFixed(2)}`;
+                    vueltoInfo.style.display = 'block';
+                    vueltoInfo.style.background = 'var(--verde-claro)';
+                    vueltoInfo.style.borderColor = 'var(--VERDE)';
+                    montoVuelto.style.color = 'var(--VERDE)';
+                    advertenciaFalta.style.display = 'none';
+                } else {
+                    const falta = Math.abs(vuelto);
+                    vueltoTexto.textContent = 'Falta:';
+                    montoVuelto.textContent = `S/ ${falta.toFixed(2)}`;
+                    vueltoInfo.style.display = 'block';
+                    vueltoInfo.style.background = '#ffe6e6';
+                    vueltoInfo.style.borderColor = 'var(--ROJO)';
+                    montoVuelto.style.color = 'var(--ROJO)';
+                    advertenciaFalta.style.display = 'block';
+                }
+            } else {
+                vueltoInfo.style.display = 'none';
+            }
+        }
+
+        function limpiarErrores() {
+            document.querySelectorAll('.error-mensaje').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+
+        function mostrarError(id, mensaje) {
+            const errorElement = document.getElementById(id);
+            errorElement.textContent = mensaje;
+            errorElement.style.display = 'block';
+        }
+
+        function validarFormulario() {
+            let valido = true;
+            limpiarErrores();
+            
+            const nombre = document.getElementById('cliente-nombre').value.trim();
+            const telefono = document.getElementById('cliente-telefono').value.trim();
+            const tipoPedido = document.getElementById('seccion-delivery').style.display === 'block' ? 'delivery' : 'recoger';
+            
+            if (!nombre) {
+                mostrarError('error-nombre', 'Por favor ingresa tu nombre');
+                valido = false;
+            }
+            
+            if (!telefono) {
+                mostrarError('error-telefono', 'Por favor ingresa tu WhatsApp');
+                valido = false;
+            } else if (!/^\d{9}$/.test(telefono.replace(/\D/g, ''))) {
+                mostrarError('error-telefono', 'Por favor ingresa un WhatsApp válido (9 dígitos)');
+                valido = false;
+            }
+            
+            if (tipoPedido === 'delivery') {
+                const distrito = document.getElementById('cliente-distrito').value;
+                const direccion = document.getElementById('cliente-direccion').value.trim();
+                
+                if (!distrito) {
+                    mostrarError('error-distrito', 'Por favor selecciona tu distrito');
+                    valido = false;
+                }
+                
+                if (!direccion) {
+                    mostrarError('error-direccion', 'Por favor ingresa tu dirección');
+                    valido = false;
+                }
+            }
+            
+            if (metodoPagoSeleccionado === 'efectivo') {
+                const montoEfectivo = parseFloat(document.getElementById('monto-efectivo').value) || 0;
+                const totalPedido = parseFloat(document.getElementById('total-pedido').textContent.replace('S/ ', '')) || 0;
+                
+                if (montoEfectivo <= 0) {
+                    mostrarError('error-efectivo', 'Por favor ingresa el monto con el que pagarás');
+                    valido = false;
+                } else if (montoEfectivo < totalPedido) {
+                    mostrarError('error-efectivo', `El monto debe ser mayor o igual al total (S/ ${totalPedido.toFixed(2)})`);
+                    valido = false;
+                }
+            }
+            
+            return valido;
+        }
+
+     function validarYEnviarPedido() {
+    if (!validarFormulario()) {
+        return;
+    }
+    
+    // Mostrar confirmación visual en lugar de alerta
+    const botonEnviar = event.target;
+    const textoOriginal = botonEnviar.textContent;
+    
+    // Si es el primer clic, mostrar confirmación
+    if (!botonEnviar.dataset.confirmando) {
+        botonEnviar.textContent = '👉 ¿CONFIRMAR ENVÍO? 👈';
+        botonEnviar.style.background = 'var(--AMARILLO)';
+        botonEnviar.style.color = 'var(--NEGRO)';
+        botonEnviar.style.fontWeight = 'bold';
+        botonEnviar.dataset.confirmando = 'true';
+        
+        // Restaurar después de 4 segundos
+        setTimeout(() => {
+            if (botonEnviar.dataset.confirmando === 'true') {
+                botonEnviar.textContent = textoOriginal;
+                botonEnviar.style.background = '';
+                botonEnviar.style.color = '';
+                botonEnviar.style.fontWeight = '';
+                delete botonEnviar.dataset.confirmando;
+            }
+        }, 4000);
+        
+        return; // No enviar aún
+    }
+    
+    // Segundo clic: enviar realmente
+    botonEnviar.textContent = 'Enviando...';
+    botonEnviar.disabled = true;
+    
+    enviarPedidoWhatsApp();
+}
+
+        function enviarPedidoWhatsApp() {
+            const nombre = document.getElementById('cliente-nombre').value.trim();
+            const telefono = document.getElementById('cliente-telefono').value.trim();
+            const tipoPedido = document.getElementById('seccion-delivery').style.display === 'block' ? 'delivery' : 'recoger';
+            const distrito = document.getElementById('cliente-distrito').value;
+            const direccion = document.getElementById('cliente-direccion').value.trim();
+            const instrucciones = document.getElementById('instrucciones').value.trim();
+            
+            const subtotal = parseFloat(document.getElementById('subtotal-pedido').textContent.replace('S/ ', '')) || 0;
+            const delivery = parseFloat(document.getElementById('costo-delivery').textContent.replace('S/ ', '')) || 0;
+            const total = parseFloat(document.getElementById('total-pedido').textContent.replace('S/ ', '')) || 0;
+            
+            let mensaje = `🍽 *NUEVO PEDIDO - CEVICHERÍA TIPOS* 🦐\n\n`;
+            
+            mensaje += `*CLIENTE:*\n`;
+            mensaje += `Nombre: ${nombre}\n`;
+            mensaje += `WhatsApp: ${telefono}\n\n`;
+            
+            mensaje += `*MODALIDAD:* ${tipoPedido === 'delivery' ? 'Delivery 🚚' : 'Recoger en tienda 🏃'}\n`;
+            
+            if (tipoPedido === 'delivery') {
+                mensaje += `Distrito: ${distrito.split(' - ')[0]}\n`;
+                mensaje += `Dirección: ${direccion}\n`;
+            }
+            
+            mensaje += `\n*PEDIDO:*\n`;
+            mensaje += `────────\n`;
+            
+            carrito.forEach(item => {
+                const itemTotal = item.precio * item.cantidad;
+                mensaje += `• ${item.cantidad} x ${item.nombre} — S/ ${itemTotal.toFixed(2)}\n`;
+                if (item.especificaciones) {
+                    mensaje += `  → ${item.especificaciones}\n`;
+                }
+            });
+            
+            mensaje += `\n*RESUMEN DE PAGO:*\n`;
+            mensaje += `Sub-total: S/ ${subtotal.toFixed(2)}\n`;
+            
+            if (delivery > 0) {
+                mensaje += `Delivery: S/ ${delivery.toFixed(2)}\n`;
+            }
+            
+            mensaje += `*TOTAL: S/ ${total.toFixed(2)}*\n\n`;
+            
+            mensaje += `*MÉTODO DE PAGO: ${metodoPagoSeleccionado.toUpperCase()}*\n`;
+            
+            if (metodoPagoSeleccionado === 'efectivo') {
+                const montoEfectivo = parseFloat(document.getElementById('monto-efectivo').value) || 0;
+                const vuelto = montoEfectivo - total;
+                mensaje += `Paga con: S/ ${montoEfectivo.toFixed(2)}\n`;
+                if (vuelto >= 0) {
+                    mensaje += `Vuelto: S/ ${vuelto.toFixed(2)}\n`;
+                } else {
+                    mensaje += `⚠ Faltan: S/ ${Math.abs(vuelto).toFixed(2)}\n`;
+                }
+            } else if (metodoPagoSeleccionado === 'yape') {
+                mensaje += `\n📱 *INSTRUCCIONES PARA PAGO CON YAPE:*\n`;
+                mensaje += `El repartidor compartirá el número de Yape para la transferencia por este mismo WhatsApp.\n`;
+                mensaje += `Por favor, envía el comprobante de transferencia.`;
+            } else if (metodoPagoSeleccionado === 'plin') {
+                mensaje += `\n📱 *INSTRUCCIONES PARA PAGO CON PLIN:*\n`;
+                mensaje += `El repartidor compartirá el número de Plin para la transferencia por este mismo WhatsApp.\n`;
+                mensaje += `Por favor, envía el comprobante de transferencia.`;
+            } else if (metodoPagoSeleccionado === 'tarjeta') {
+                mensaje += `\n💳 *INSTRUCCIONES PARA PAGO CON TARJETA:*\n`;
+                mensaje += `El repartidor llevará POS para cobro con tarjeta (Visa/Mastercard).\n`;
+                mensaje += `Puedes pagar al momento de la entrega.`;
+            }
+            
+            if (instrucciones) {
+                mensaje += `\n\n*NOTAS:* ${instrucciones}\n`;
+            }
+            
+            const numeroWhatsApp = '51977420834';
+            const mensajeCodificado = encodeURIComponent(mensaje);
+            
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`, '_blank');
+            
+            setTimeout(() => {
+                carrito = [];
+                actualizarCarrito();
+                cerrarFormularioPedido();
+                mostrarPantalla('bienvenida');
+                alert('✅ Pedido enviado. Revisa WhatsApp para confirmar.');
+            }, 1000);
+        }
+
+        // ================================================
+        // FUNCIÓN PARA RESERVAS
+        // ================================================
+        function enviarReservaWhatsApp() {
+            const nombre = document.getElementById('reserva-nombre').value;
+            const telefono = document.getElementById('reserva-telefono').value;
+            const personas = document.getElementById('reserva-personas').value;
+            const fecha = document.getElementById('reserva-fecha').value;
+            const hora = document.getElementById('reserva-hora').value;
+
+            if (!nombre || !telefono || !personas || !fecha || !hora) {
+                alert('✗ Por favor, completa todos los campos');
+                return;
+            }
+
+            if (parseInt(personas) < 1) {
+                alert('✗ El número de personas debe ser mayor a 0');
+                return;
+            }
+
+            const fechaObj = new Date(fecha);
+            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            let mensaje = `¡Hola! 👋 Quisiera hacer una reserva:\n\n`;
+            mensaje += `*📋 DATOS DE LA RESERVA:*\n`;
+            mensaje += `────────────────\n`;
+            mensaje += `👤 *Nombre:* ${nombre}\n`;
+            mensaje += `📞 *WhatsApp:* ${telefono}\n`;
+            mensaje += `👥 *Personas:* ${personas}\n`;
+            mensaje += `📅 *Fecha:* ${fechaFormateada}\n`;
+            mensaje += `⏰ *Hora:* ${hora}\n\n`;
+            mensaje += `Por favor, confírmenme la disponibilidad. ¡Gracias!`;
+
+            const mensajeCodificado = encodeURIComponent(mensaje);
+            const numeroWhatsApp = '51977420834';
+            
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`, '_blank');
+            
+            setTimeout(() => {
+                document.getElementById('reserva-nombre').value = '';
+                document.getElementById('reserva-telefono').value = '';
+                document.getElementById('reserva-personas').value = '2';
+                document.getElementById('reserva-fecha').value = '';
+                document.getElementById('reserva-hora').value = '';
+                mostrarPantalla('bienvenida');
+                alert('✅ Solicitud de reserva enviada. Revisa WhatsApp para confirmar.');
+            }, 1000);
+        }
+
+        // ================================================
+        // NUEVA FUNCIÓN PARA COMBINADOS MARINOS
+        // ================================================
+     function abrirModalCombinadoMarino(nombre, precio) {
+    platoActual = nombre;
+    precioActual = precio;
+    opcionesSeleccionadas = {};
+
+    document.getElementById('titulo-personalizacion').textContent = `Personaliza: ${nombre}`;
+    document.getElementById('especificaciones-personalizacion').value = '';
+
+    const opcionesContainer = document.getElementById('opciones-container');
+    opcionesContainer.innerHTML = '';
+
+    // ===== SECCIÓN 1: TIPO DE CHAUFA (si aplica) =====
+    if (nombre.includes('chaufa') || nombre.includes('Chaufa') || 
+        nombre === 'Doble Marino 2' || nombre === 'Triple Marino 3' || 
+        nombre === 'Triple Marino 4' || nombre === 'Ronda Marina 3' || 
+        nombre === 'Ronda Marina 4') {
+        
+        // Título de sección con separador
+        const seccionChaufa = document.createElement('div');
+        seccionChaufa.style.marginBottom = '25px';
+        seccionChaufa.style.paddingBottom = '15px';
+        seccionChaufa.style.borderBottom = '2px solid var(--gris-claro)';
+        
+        const tituloSeccionChaufa = document.createElement('div');
+        tituloSeccionChaufa.style.fontSize = '1rem';
+        tituloSeccionChaufa.style.fontWeight = '700';
+        tituloSeccionChaufa.style.color = 'var(--VERDE)';
+        tituloSeccionChaufa.style.marginBottom = '12px';
+        tituloSeccionChaufa.style.display = 'flex';
+        tituloSeccionChaufa.style.alignItems = 'center';
+        tituloSeccionChaufa.style.gap = '8px';
+        tituloSeccionChaufa.innerHTML = `
+            <span>🍚</span>
+            <span>Tipo de Chaufa <span style="color: var(--ROJO);">*</span></span>
+        `;
+        
+        const descripcionChaufa = document.createElement('div');
+        descripcionChaufa.style.fontSize = '0.85rem';
+        descripcionChaufa.style.color = '#666';
+        descripcionChaufa.style.marginBottom = '15px';
+        descripcionChaufa.style.fontStyle = 'italic';
+        descripcionChaufa.textContent = 'Selecciona una opción:';
+        
+        seccionChaufa.appendChild(tituloSeccionChaufa);
+        seccionChaufa.appendChild(descripcionChaufa);
+        
+        // Contenedor de opciones
+        const opcionesChaufaContainer = document.createElement('div');
+        opcionesChaufaContainer.style.display = 'flex';
+        opcionesChaufaContainer.style.gap = '10px';
+        opcionesChaufaContainer.style.flexWrap = 'wrap';
+        
+        const opcionesChaufa = ['Chaufa de Pescado', 'Chaufa de Mariscos'];
+        let primeraOpcionChaufaElemento = null;
+        
+        opcionesChaufa.forEach((opcion, index) => {
+            const opcionElement = document.createElement('div');
+            opcionElement.className = 'opcion-personalizacion';
+            opcionElement.dataset.categoria = 'Chaufa';
+            opcionElement.textContent = opcion;
+            opcionElement.style.flex = '1';
+            opcionElement.style.minWidth = '120px';
+            opcionElement.onclick = () => seleccionarOpcionPersonalizacion(opcionElement, opcion, 'Chaufa');
+            opcionesChaufaContainer.appendChild(opcionElement);
+            
+            if (index === 0) {
+                primeraOpcionChaufaElemento = opcionElement;
+            }
+        });
+        
+        seccionChaufa.appendChild(opcionesChaufaContainer);
+        opcionesContainer.appendChild(seccionChaufa);
+        
+        // Seleccionar automáticamente la primera opción
+        if (primeraOpcionChaufaElemento) {
+            setTimeout(() => {
+                seleccionarOpcionPersonalizacion(primeraOpcionChaufaElemento, opcionesChaufa[0], 'Chaufa');
+            }, 100);
+        }
+    }
+
+    // ===== SECCIÓN 2: NIVEL DE AJÍ =====
+    const seccionAji = document.createElement('div');
+    seccionAji.style.marginBottom = '25px';
+    seccionAji.style.paddingBottom = '15px';
+    seccionAji.style.borderBottom = '2px solid var(--gris-claro)';
+    
+    const tituloSeccionAji = document.createElement('div');
+    tituloSeccionAji.style.fontSize = '1rem';
+    tituloSeccionAji.style.fontWeight = '700';
+    tituloSeccionAji.style.color = 'var(--VERDE)';
+    tituloSeccionAji.style.marginBottom = '12px';
+    tituloSeccionAji.style.display = 'flex';
+    tituloSeccionAji.style.alignItems = 'center';
+    tituloSeccionAji.style.gap = '8px';
+    tituloSeccionAji.innerHTML = `
+        <span>🌶️</span>
+        <span>Nivel de Ají <span style="color: var(--ROJO);">*</span></span>
+    `;
+    
+    const descripcionAji = document.createElement('div');
+    descripcionAji.style.fontSize = '0.85rem';
+    descripcionAji.style.color = '#666';
+    descripcionAji.style.marginBottom = '15px';
+    descripcionAji.style.fontStyle = 'italic';
+    descripcionAji.textContent = '¿Cómo te gusta el picante?';
+    
+    seccionAji.appendChild(tituloSeccionAji);
+    seccionAji.appendChild(descripcionAji);
+    
+    // Contenedor de opciones
+    const opcionesAjiContainer = document.createElement('div');
+    opcionesAjiContainer.style.display = 'flex';
+    opcionesAjiContainer.style.gap = '10px';
+    opcionesAjiContainer.style.flexWrap = 'wrap';
+    
+    const opcionesAji = [
+        {texto: 'Sin ají',  desc: 'Sin picante'},
+        {texto: 'Poco ají', desc: 'Suave'},
+        {texto: 'Picante',  desc: 'Bien picante'}
+    ];
+    let primeraOpcionAjiElemento = null;
+    
+    opcionesAji.forEach((opcionObj, index) => {
+        const opcionElement = document.createElement('div');
+        opcionElement.className = 'opcion-personalizacion';
+        opcionElement.dataset.categoria = 'Picante';
+        opcionElement.style.flex = '1';
+        opcionElement.style.minWidth = '100px';
+        opcionElement.style.padding = '12px 8px';
+        opcionElement.style.textAlign = 'center';
+        opcionElement.style.display = 'flex';
+        opcionElement.style.flexDirection = 'column';
+        opcionElement.style.alignItems = 'center';
+        opcionElement.style.gap = '5px';
+        
+        opcionElement.innerHTML = `
+            <div style="font-size: 1.3rem;">${opcionObj.emoji}</div>
+            <div style="font-weight: 600; font-size: 0.9rem;">${opcionObj.texto}</div>
+            <div style="font-size: 0.75rem; color: #666;">${opcionObj.desc}</div>
+        `;
+        
+        opcionElement.onclick = () => seleccionarOpcionPersonalizacion(opcionElement, opcionObj.texto, 'Picante');
+        opcionesAjiContainer.appendChild(opcionElement);
+        
+        if (opcionObj.texto === 'Poco ají') {
+            primeraOpcionAjiElemento = opcionElement;
+        }
+    });
+    
+    seccionAji.appendChild(opcionesAjiContainer);
+    opcionesContainer.appendChild(seccionAji);
+
+    // ===== SECCIÓN 3: ESPECIFICACIONES ADICIONALES =====
+    const seccionEspecificaciones = document.createElement('div');
+    seccionEspecificaciones.style.marginBottom = '15px';
+    
+    const tituloSeccionEspec = document.createElement('div');
+    tituloSeccionEspec.style.fontSize = '1rem';
+    tituloSeccionEspec.style.fontWeight = '700';
+    tituloSeccionEspec.style.color = 'var(--VERDE)';
+    tituloSeccionEspec.style.marginBottom = '12px';
+    tituloSeccionEspec.style.display = 'flex';
+    tituloSeccionEspec.style.alignItems = 'center';
+    tituloSeccionEspec.style.gap = '8px';
+    tituloSeccionEspec.innerHTML = `
+        <span>📝</span>
+        <span>Especificaciones adicionales</span>
+    `;
+    
+    const descripcionEspec = document.createElement('div');
+    descripcionEspec.style.fontSize = '0.85rem';
+    descripcionEspec.style.color = '#666';
+    descripcionEspec.style.marginBottom = '10px';
+    descripcionEspec.style.fontStyle = 'italic';
+    descripcionEspec.textContent = 'Opcional: indicaciones especiales para tu pedido';
+    
+    seccionEspecificaciones.appendChild(tituloSeccionEspec);
+    seccionEspecificaciones.appendChild(descripcionEspec);
+    opcionesContainer.appendChild(seccionEspecificaciones);
+    
+    // Ya tenemos el textarea de especificaciones en el HTML base
+    
+    // Seleccionar automáticamente "Poco ají"
+    if (primeraOpcionAjiElemento) {
+        setTimeout(() => {
+            seleccionarOpcionPersonalizacion(primeraOpcionAjiElemento, 'Poco ají', 'Picante');
+        }, 100);
+    }
+
+    document.getElementById('modal-personalizacion').style.display = 'flex';
+}
+
+// ================================================
+// FUNCIONES PARA ABRIR/CERRAR CARRITO
+// ================================================
+function mostrarCarrito() {
+    if (carrito.length === 0) {
+        document.getElementById('carrito-vacio').style.display = 'block';
+        document.getElementById('carrito-items').innerHTML = '';
+        document.getElementById('carrito-resumen').style.display = 'none';
+        document.getElementById('carrito-botones').style.display = 'none';
+        document.getElementById('sugerencias-container').style.display = 'none';
+    }
+    
+    actualizarCarrito();
+    document.getElementById('carrito-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarCarrito() {
+    document.getElementById('carrito-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function modificarCantidad(index, cambio) {
+    if (carrito[index]) {
+        carrito[index].cantidad += cambio;
+        
+        if (carrito[index].cantidad <= 0) {
+            carrito.splice(index, 1);
+        }
+        
+        actualizarCarrito();
+    }
+}
+
+function eliminarDelCarrito(index) {
+    if (confirm('¿Quieres eliminar este artículo del carrito?')) {
+        carrito.splice(index, 1);
+        actualizarCarrito();
+    }
+}
+
+// Cerrar carrito al hacer clic fuera
+document.addEventListener('click', function(event) {
+    const carritoModal = document.getElementById('carrito-modal');
+    const carritoContenido = document.querySelector('.carrito-contenido');
+    const carritoBtn = document.querySelector('.carrito-btn');
+    
+    if (carritoModal.style.display === 'block' && 
+        !carritoContenido.contains(event.target) && 
+        !carritoBtn.contains(event.target)) {
+        cerrarCarrito();
+    }
+});
+
+// Cerrar con tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        cerrarCarrito();
+        cerrarModalPersonalizacion();
+        cerrarFormularioPedido();
+    }
+});
+// Cerrar con tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        cerrarCarrito();
+        cerrarModalPersonalizacion();
+        cerrarFormularioPedido();
+    }
+});
+        // ================================================
+        // INICIALIZACIÓN
+        // ================================================
+       document.addEventListener('DOMContentLoaded', function() {
+    actualizarCarrito();
+    
+    // Obtener fecha de mañana (no permite reservar para hoy)
+    const hoy = new Date();
+    const manana = new Date(hoy);
+    manana.setDate(hoy.getDate() + 1);
+    const fechaMinima = manana.toISOString().split('T')[0];
+    
+    const campoFechaReserva = document.getElementById('reserva-fecha');
+    const campoHoraReserva = document.getElementById('reserva-hora');
+
+    if (campoFechaReserva) {
+        campoFechaReserva.setAttribute('min', fechaMinima);
+        // También establecer máximo 30 días en el futuro
+        const maxFecha = new Date(hoy);
+        maxFecha.setDate(hoy.getDate() + 30);
+        campoFechaReserva.setAttribute('max', maxFecha.toISOString().split('T')[0]);
+    }
+    
+    if (campoHoraReserva) {
+        campoHoraReserva.setAttribute('min', '11:00');
+        campoHoraReserva.setAttribute('max', '17:00');
+        campoHoraReserva.value = '12:00'; // Hora por defecto
+    }
+            
+            const distritoSelect = document.getElementById('cliente-distrito');
+            if (distritoSelect) {
+                distritoSelect.addEventListener('change', actualizarCostoDelivery);
+            }
+            
+            const montoEfectivoInput = document.getElementById('monto-efectivo');
+            if (montoEfectivoInput) {
+                montoEfectivoInput.addEventListener('input', calcularVuelto);
+            }
+            
+            seleccionarTipoPedido('recoger');
+            seleccionarMetodoPago('efectivo');
+        });
+    </script>
+</body>
+</html>
