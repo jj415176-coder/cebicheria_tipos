@@ -1561,6 +1561,189 @@
         font-size: 0.75rem;
     }
 }
+        /* ========== CORRECCIONES RESPONSIVE ========== */
+    @media (max-width: 768px) {
+        /* Mejoras para modal de personalización en móvil */
+        .modal-personalizacion-contenido {
+            width: 95%;
+            padding: 1.5rem;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        
+        .opcion-personalizacion {
+            min-width: 100px !important;
+            padding: 12px 5px !important;
+            font-size: 0.85rem !important;
+        }
+        
+        .botones-modal-personalizacion {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .btn-cancelar-personalizacion,
+        .btn-confirmar-personalizacion {
+            width: 100% !important;
+        }
+        
+        /* Mejoras para el formulario de pedido en móvil */
+        .carrito-contenido {
+            width: 95%;
+            margin: 10px auto;
+            padding: 15px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .carrito-item {
+            grid-template-columns: 1fr;
+            text-align: left;
+            gap: 10px;
+        }
+        
+        .carrito-item-imagen {
+            width: 100%;
+            height: 150px;
+            margin: 0 auto;
+        }
+        
+        .carrito-item-cantidad {
+            justify-content: flex-start;
+        }
+        
+        /* Ajustes para botones de opciones */
+        .opciones-personalizacion > div {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .opcion-personalizacion {
+            width: 100% !important;
+            margin-bottom: 5px;
+        }
+        
+        /* Asegurar que los textos no se salgan */
+        .carrito-item-nombre {
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+        
+        .plato-nombre {
+            font-size: 0.9rem;
+        }
+        
+        .plato-desc {
+            font-size: 0.8rem;
+        }
+        
+        /* Mejoras para formulario de reserva */
+        .form-reserva {
+            padding: 15px;
+        }
+        
+        .form-grid-pro {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        /* Ajustes extra para pantallas muy pequeñas */
+        .modal-personalizacion-contenido {
+            padding: 1rem;
+        }
+        
+        .opcion-personalizacion {
+            padding: 10px 5px !important;
+            font-size: 0.8rem !important;
+        }
+        
+        .carrito-contenido {
+            padding: 10px;
+        }
+        
+        .carrito-header h2 {
+            font-size: 1.3rem;
+        }
+        
+        .carrito-resumen {
+            padding: 1rem;
+        }
+        
+        .carrito-item-subtotal {
+            font-size: 1rem;
+        }
+        
+        /* Botones más grandes para tocar fácilmente */
+        .btn-agregar, .btn {
+            padding: 12px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .cantidad-btn {
+            width: 36px;
+            height: 36px;
+        }
+    }
+
+    /* ========== MEJORAS PARA OPÇIONES EN MODAL ========== */
+    .opcion-personalizacion {
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent; /* Elimina el highlight azul en iOS */
+    }
+
+    .opcion-personalizacion:active {
+        transform: scale(0.98);
+    }
+
+    /* Evitar zoom en inputs en iOS */
+    @media screen and (max-width: 768px) {
+        input, select, textarea {
+            font-size: 16px; /* Previene zoom automático en iOS */
+        }
+    }
+        /* En el CSS, agrega esto */
+@media (max-width: 768px) {
+    .btn-agregar {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+    
+    .plato-item {
+        padding: 15px;
+    }
+    
+    .plato-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .plato-precio, .precio-doble {
+        margin-top: 10px;
+        align-self: stretch;
+        text-align: center;
+    }
+    
+    .precio-opcion {
+        justify-content: space-between;
+        padding: 8px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-agregar {
+        padding: 14px;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+    
+    .plato-imagen {
+        height: 140px;
+    }
+}
     </style>
 </head>
 <body>
@@ -4095,7 +4278,7 @@ function mostrarNotificacionAgregado(nombre) {
         // ================================================
         // NUEVA FUNCIÓN PARA COMBINADOS MARINOS
         // ================================================
-     function abrirModalCombinadoMarino(nombre, precio) {
+function abrirModalCombinadoMarino(nombre, precio) {
     platoActual = nombre;
     precioActual = precio;
     opcionesSeleccionadas = {};
@@ -4112,30 +4295,21 @@ function mostrarNotificacionAgregado(nombre) {
         nombre === 'Triple Marino 4' || nombre === 'Ronda Marina 3' || 
         nombre === 'Ronda Marina 4') {
         
-        // Título de sección con separador
+        // Título de sección
         const seccionChaufa = document.createElement('div');
-        seccionChaufa.style.marginBottom = '25px';
-        seccionChaufa.style.paddingBottom = '15px';
-        seccionChaufa.style.borderBottom = '2px solid var(--gris-claro)';
+        seccionChaufa.style.marginBottom = '20px';
         
         const tituloSeccionChaufa = document.createElement('div');
-        tituloSeccionChaufa.style.fontSize = '1rem';
+        tituloSeccionChaufa.style.fontSize = '0.95rem';
         tituloSeccionChaufa.style.fontWeight = '700';
         tituloSeccionChaufa.style.color = 'var(--VERDE)';
-        tituloSeccionChaufa.style.marginBottom = '12px';
-        tituloSeccionChaufa.style.display = 'flex';
-        tituloSeccionChaufa.style.alignItems = 'center';
-        tituloSeccionChaufa.style.gap = '8px';
-        tituloSeccionChaufa.innerHTML = `
-            <span>🍚</span>
-            <span>Tipo de Chaufa <span style="color: var(--ROJO);">*</span></span>
-        `;
+        tituloSeccionChaufa.style.marginBottom = '8px';
+        tituloSeccionChaufa.innerHTML = `🍚 Tipo de Chaufa <span style="color: var(--ROJO);">*</span>`;
         
         const descripcionChaufa = document.createElement('div');
-        descripcionChaufa.style.fontSize = '0.85rem';
+        descripcionChaufa.style.fontSize = '0.8rem';
         descripcionChaufa.style.color = '#666';
-        descripcionChaufa.style.marginBottom = '15px';
-        descripcionChaufa.style.fontStyle = 'italic';
+        descripcionChaufa.style.marginBottom = '10px';
         descripcionChaufa.textContent = 'Selecciona una opción:';
         
         seccionChaufa.appendChild(tituloSeccionChaufa);
@@ -4144,62 +4318,63 @@ function mostrarNotificacionAgregado(nombre) {
         // Contenedor de opciones
         const opcionesChaufaContainer = document.createElement('div');
         opcionesChaufaContainer.style.display = 'flex';
-        opcionesChaufaContainer.style.gap = '10px';
         opcionesChaufaContainer.style.flexWrap = 'wrap';
+        opcionesChaufaContainer.style.gap = '8px';
         
-        const opcionesChaufa = ['Chaufa de Pescado', 'Chaufa de Mariscos'];
-        let primeraOpcionChaufaElemento = null;
+        const opcionesChaufa = [
+            {texto: 'Chaufa de Pescado', emoji: '🐟'},
+            {texto: 'Chaufa de Mariscos', emoji: '🦐'}
+        ];
         
-        opcionesChaufa.forEach((opcion, index) => {
+        opcionesChaufa.forEach((opcion) => {
             const opcionElement = document.createElement('div');
             opcionElement.className = 'opcion-personalizacion';
             opcionElement.dataset.categoria = 'Chaufa';
-            opcionElement.textContent = opcion;
-            opcionElement.style.flex = '1';
-            opcionElement.style.minWidth = '120px';
-            opcionElement.onclick = () => seleccionarOpcionPersonalizacion(opcionElement, opcion, 'Chaufa');
-            opcionesChaufaContainer.appendChild(opcionElement);
+            opcionElement.style.flex = '1 0 calc(50% - 8px)'; /* 2 columnas en móvil */
+            opcionElement.style.minWidth = '0';
+            opcionElement.style.padding = '12px 5px';
+            opcionElement.style.textAlign = 'center';
+            opcionElement.style.display = 'flex';
+            opcionElement.style.flexDirection = 'column';
+            opcionElement.style.alignItems = 'center';
+            opcionElement.style.gap = '5px';
             
-            if (index === 0) {
-                primeraOpcionChaufaElemento = opcionElement;
-            }
+            opcionElement.innerHTML = `
+                <div style="font-size: 1.2rem;">${opcion.emoji}</div>
+                <div style="font-weight: 600; font-size: 0.85rem;">${opcion.texto}</div>
+            `;
+            
+            opcionElement.onclick = () => {
+                // Deseleccionar otros en la misma categoría
+                document.querySelectorAll('.opcion-personalizacion[data-categoria="Chaufa"]').forEach(el => {
+                    el.classList.remove('seleccionado');
+                });
+                opcionElement.classList.add('seleccionado');
+                opcionesSeleccionadas['Chaufa'] = opcion.texto;
+            };
+            
+            opcionesChaufaContainer.appendChild(opcionElement);
         });
         
         seccionChaufa.appendChild(opcionesChaufaContainer);
         opcionesContainer.appendChild(seccionChaufa);
-        
-        // Seleccionar automáticamente la primera opción
-        if (primeraOpcionChaufaElemento) {
-            setTimeout(() => {
-                seleccionarOpcionPersonalizacion(primeraOpcionChaufaElemento, opcionesChaufa[0], 'Chaufa');
-            }, 100);
-        }
     }
 
     // ===== SECCIÓN 2: NIVEL DE AJÍ =====
     const seccionAji = document.createElement('div');
-    seccionAji.style.marginBottom = '25px';
-    seccionAji.style.paddingBottom = '15px';
-    seccionAji.style.borderBottom = '2px solid var(--gris-claro)';
+    seccionAji.style.marginBottom = '20px';
     
     const tituloSeccionAji = document.createElement('div');
-    tituloSeccionAji.style.fontSize = '1rem';
+    tituloSeccionAji.style.fontSize = '0.95rem';
     tituloSeccionAji.style.fontWeight = '700';
     tituloSeccionAji.style.color = 'var(--VERDE)';
-    tituloSeccionAji.style.marginBottom = '12px';
-    tituloSeccionAji.style.display = 'flex';
-    tituloSeccionAji.style.alignItems = 'center';
-    tituloSeccionAji.style.gap = '8px';
-    tituloSeccionAji.innerHTML = `
-        <span>🌶️</span>
-        <span>Nivel de Ají <span style="color: var(--ROJO);">*</span></span>
-    `;
+    tituloSeccionAji.style.marginBottom = '8px';
+    tituloSeccionAji.innerHTML = `🌶️ Nivel de Ají <span style="color: var(--ROJO);">*</span>`;
     
     const descripcionAji = document.createElement('div');
-    descripcionAji.style.fontSize = '0.85rem';
+    descripcionAji.style.fontSize = '0.8rem';
     descripcionAji.style.color = '#666';
-    descripcionAji.style.marginBottom = '15px';
-    descripcionAji.style.fontStyle = 'italic';
+    descripcionAji.style.marginBottom = '10px';
     descripcionAji.textContent = '¿Cómo te gusta el picante?';
     
     seccionAji.appendChild(tituloSeccionAji);
@@ -4208,86 +4383,59 @@ function mostrarNotificacionAgregado(nombre) {
     // Contenedor de opciones
     const opcionesAjiContainer = document.createElement('div');
     opcionesAjiContainer.style.display = 'flex';
-    opcionesAjiContainer.style.gap = '10px';
     opcionesAjiContainer.style.flexWrap = 'wrap';
+    opcionesAjiContainer.style.gap = '8px';
     
     const opcionesAji = [
-        {texto: 'Sin ají',  desc: 'Sin picante'},
-        {texto: 'Poco ají', desc: 'Suave'},
-        {texto: 'Picante',  desc: 'Bien picante'}
+        {texto: 'Sin ají', emoji: '🚫', desc: 'Sin picante'},
+        {texto: 'Poco ají', emoji: '🌶️', desc: 'Suave'},
+        {texto: 'Picante', emoji: '🔥', desc: 'Bien picante'}
     ];
-    let primeraOpcionAjiElemento = null;
     
-    opcionesAji.forEach((opcionObj, index) => {
+    opcionesAji.forEach((opcion) => {
         const opcionElement = document.createElement('div');
         opcionElement.className = 'opcion-personalizacion';
         opcionElement.dataset.categoria = 'Picante';
-        opcionElement.style.flex = '1';
-        opcionElement.style.minWidth = '100px';
-        opcionElement.style.padding = '12px 8px';
+        opcionElement.style.flex = '1 0 calc(33.333% - 8px)'; /* 3 columnas */
+        opcionElement.style.minWidth = '0';
+        opcionElement.style.padding = '10px 5px';
         opcionElement.style.textAlign = 'center';
         opcionElement.style.display = 'flex';
         opcionElement.style.flexDirection = 'column';
         opcionElement.style.alignItems = 'center';
-        opcionElement.style.gap = '5px';
+        opcionElement.style.gap = '3px';
         
         opcionElement.innerHTML = `
-            <div style="font-size: 1.3rem;">${opcionObj.emoji}</div>
-            <div style="font-weight: 600; font-size: 0.9rem;">${opcionObj.texto}</div>
-            <div style="font-size: 0.75rem; color: #666;">${opcionObj.desc}</div>
+            <div style="font-size: 1.2rem;">${opcion.emoji}</div>
+            <div style="font-weight: 600; font-size: 0.8rem;">${opcion.texto}</div>
+            <div style="font-size: 0.7rem; color: #666;">${opcion.desc}</div>
         `;
         
-        opcionElement.onclick = () => seleccionarOpcionPersonalizacion(opcionElement, opcionObj.texto, 'Picante');
+        opcionElement.onclick = () => {
+            // Deseleccionar otros en la misma categoría
+            document.querySelectorAll('.opcion-personalizacion[data-categoria="Picante"]').forEach(el => {
+                el.classList.remove('seleccionado');
+            });
+            opcionElement.classList.add('seleccionado');
+            opcionesSeleccionadas['Picante'] = opcion.texto;
+        };
+        
         opcionesAjiContainer.appendChild(opcionElement);
         
-        if (opcionObj.texto === 'Poco ají') {
-            primeraOpcionAjiElemento = opcionElement;
+        // Seleccionar "Poco ají" por defecto
+        if (opcion.texto === 'Poco ají') {
+            setTimeout(() => {
+                opcionElement.classList.add('seleccionado');
+                opcionesSeleccionadas['Picante'] = 'Poco ají';
+            }, 100);
         }
     });
     
     seccionAji.appendChild(opcionesAjiContainer);
     opcionesContainer.appendChild(seccionAji);
 
-    // ===== SECCIÓN 3: ESPECIFICACIONES ADICIONALES =====
-    const seccionEspecificaciones = document.createElement('div');
-    seccionEspecificaciones.style.marginBottom = '15px';
-    
-    const tituloSeccionEspec = document.createElement('div');
-    tituloSeccionEspec.style.fontSize = '1rem';
-    tituloSeccionEspec.style.fontWeight = '700';
-    tituloSeccionEspec.style.color = 'var(--VERDE)';
-    tituloSeccionEspec.style.marginBottom = '12px';
-    tituloSeccionEspec.style.display = 'flex';
-    tituloSeccionEspec.style.alignItems = 'center';
-    tituloSeccionEspec.style.gap = '8px';
-    tituloSeccionEspec.innerHTML = `
-        <span>📝</span>
-        <span>Especificaciones adicionales</span>
-    `;
-    
-    const descripcionEspec = document.createElement('div');
-    descripcionEspec.style.fontSize = '0.85rem';
-    descripcionEspec.style.color = '#666';
-    descripcionEspec.style.marginBottom = '10px';
-    descripcionEspec.style.fontStyle = 'italic';
-    descripcionEspec.textContent = 'Opcional: indicaciones especiales para tu pedido';
-    
-    seccionEspecificaciones.appendChild(tituloSeccionEspec);
-    seccionEspecificaciones.appendChild(descripcionEspec);
-    opcionesContainer.appendChild(seccionEspecificaciones);
-    
-    // Ya tenemos el textarea de especificaciones en el HTML base
-    
-    // Seleccionar automáticamente "Poco ají"
-    if (primeraOpcionAjiElemento) {
-        setTimeout(() => {
-            seleccionarOpcionPersonalizacion(primeraOpcionAjiElemento, 'Poco ají', 'Picante');
-        }, 100);
-    }
-
     document.getElementById('modal-personalizacion').style.display = 'flex';
 }
-
 // ================================================
 // FUNCIONES PARA ABRIR/CERRAR CARRITO
 // ================================================
