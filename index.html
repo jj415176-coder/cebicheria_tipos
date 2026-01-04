@@ -3884,17 +3884,19 @@ function mostrarNotificacionAgregado(nombre) {
             actualizarTotalPedido();
         }
 
-        function actualizarTotalPedido() {
+    function actualizarTotalPedido() {
     const subtotalElement = document.getElementById('subtotal-pedido');
     const totalElement = document.getElementById('total-pedido');
     const costoDeliveryElement = document.getElementById('costo-delivery');
     
+    if (!subtotalElement || !totalElement || !costoDeliveryElement) return;
+    
     const subtotalText = subtotalElement.textContent.replace('S/ ', '');
     const subtotal = parseFloat(subtotalText) || 0;
     
-    // Si dice "Consultar", no sumar nada
+    // Si dice "Consultar", mostrar mensaje especial
     if (costoDeliveryElement.textContent === 'Consultar') {
-        totalElement.textContent = `S/ ${subtotal.toFixed(2)}*`;
+        totalElement.innerHTML = `S/ ${subtotal.toFixed(2)} <span style="color: var(--ROJO); font-size: 0.9em;">+ delivery a consultar</span>`;
     } else {
         const deliveryText = costoDeliveryElement.textContent.replace('S/ ', '');
         const delivery = parseFloat(deliveryText) || 0;
@@ -3902,18 +3904,6 @@ function mostrarNotificacionAgregado(nombre) {
         totalElement.textContent = `S/ ${total.toFixed(2)}`;
     }
 }
-            
-            const total = subtotal + delivery;
-            
-            totalElement.textContent = `S/ ${total.toFixed(2)}`;
-            costoDeliveryElement.textContent = `S/ ${delivery.toFixed(2)}`;
-            
-            const totalRecordatorio = document.getElementById('total-recordatorio');
-            if (totalRecordatorio) {
-                totalRecordatorio.textContent = `S/ ${total.toFixed(2)}`;
-            }
-        }
-
         function resetearFormularioPedido() {
             document.getElementById('cliente-nombre').value = '';
             document.getElementById('cliente-telefono').value = '';
@@ -3977,62 +3967,59 @@ function mostrarNotificacionAgregado(nombre) {
             } else if (metodo === 'tarjeta') {
                 document.getElementById('campo-tarjeta').style.display = 'block';
             }
-            
          function actualizarCostoDelivery() {
+    // 1. Obtener elementos
     const distritoSelect = document.getElementById('cliente-distrito');
+    const selectedValue = distritoSelect.value;
     const costoDeliveryElement = document.getElementById('costo-delivery');
-    const totalElement = document.getElementById('total-pedido');
     
-    if (distritoSelect && distritoSelect.value) {
-        if (distritoSelect.value === 'interdistrital-consultar' || distritoSelect.value === 'otro') {
-            // Para Interdistrital y Otro: Mostrar "Consultar"
-            costoDeliveryElement.textContent = 'Consultar';
-            
-            // Calcular subtotal (sin delivery)
-            const subtotalElement = document.getElementById('subtotal-pedido');
-            const subtotalText = subtotalElement.textContent.replace('S/ ', '');
-            const subtotal = parseFloat(subtotalText) || 0;
-            
-            // Mostrar solo subtotal con nota
-            totalElement.textContent = `S/ ${subtotal.toFixed(2)}*`;
-            
-            // Agregar nota explicativa
-            const notaExistente = document.getElementById('nota-delivery');
-            if (!notaExistente) {
-                const contenedorTotal = totalElement.parentElement;
-                const nota = document.createElement('div');
-                nota.id = 'nota-delivery';
-                nota.style.fontSize = '0.75rem';
-                nota.style.color = 'var(--ROJO)';
-                nota.style.fontStyle = 'italic';
-                nota.style.marginTop = '5px';
-                nota.textContent = '* El costo de delivery se consultará por WhatsApp';
-                contenedorTotal.appendChild(nota);
+    // 2. Para DEBUG (opcional, quita después)
+    console.log('Distrito seleccionado:', selectedValue);
+    
+    // 3. Actualizar en FORMULARIO
+    if (selectedValue === 'interdistrital-consultar' || selectedValue === 'otro') {
+        costoDeliveryElement.textContent = 'Consultar';
+        costoDeliveryElement.style.color = '#d32f2f'; // Rojo
+        costoDeliveryElement.style.fontWeight = 'bold';
+        costoDeliveryElement.style.backgroundColor = '#ffebee'; // Fondo rojo claro
+        costoDeliveryElement.style.padding = '2px 8px';
+        costoDeliveryElement.style.borderRadius = '4px';
+    } 
+    else if (selectedValue && selectedValue.includes('S/')) {
+        const precioMatch = selectedValue.match(/S\/\s*(\d+)/);
+        if (precioMatch) {
+            costoDeliveryElement.textContent = `S/ ${precioMatch[1]}`;
+            costoDeliveryElement.style.color = '';
+            costoDeliveryElement.style.fontWeight = '';
+            costoDeliveryElement.style.backgroundColor = '';
+        }
+    }
+    else {
+        costoDeliveryElement.textContent = 'S/ 0.00';
+        costoDeliveryElement.style.color = '';
+        costoDeliveryElement.style.fontWeight = '';
+        costoDeliveryElement.style.backgroundColor = '';
+    }
+    
+    // 4. Actualizar en RESUMEN DEL CARRITO (si está abierto)
+    const envioCarrito = document.getElementById('envio-carrito');
+    if (envioCarrito) {
+        if (selectedValue === 'interdistrital-consultar' || selectedValue === 'otro') {
+            envioCarrito.textContent = 'Consultar';
+            envioCarrito.style.color = 'var(--ROJO)';
+        } else if (selectedValue && selectedValue.includes('S/')) {
+            const precioMatch = selectedValue.match(/S\/\s*(\d+)/);
+            if (precioMatch) {
+                envioCarrito.textContent = `S/ ${precioMatch[1]}`;
+                envioCarrito.style.color = '';
             }
         } else {
-            // Para distritos con precio fijo
-            const match = distritoSelect.value.match(/S\/\s*(\d+)/);
-            if (match) {
-                const delivery = parseInt(match[1]);
-                costoDeliveryElement.textContent = `S/ ${delivery.toFixed(2)}`;
-                
-                // Quitar nota si existe
-                const nota = document.getElementById('nota-delivery');
-                if (nota) nota.remove();
-                
-                actualizarTotalPedido();
-            }
+            envioCarrito.textContent = 'S/ 0.00';
         }
-    } else {
-        // Si no hay distrito seleccionado
-        costoDeliveryElement.textContent = 'S/ 0.00';
-        
-        // Quitar nota si existe
-        const nota = document.getElementById('nota-delivery');
-        if (nota) nota.remove();
-        
-        actualizarTotalPedido();
     }
+    
+    // 5. Actualizar total
+    actualizarTotalPedido();
 }
 
         function calcularVuelto() {
