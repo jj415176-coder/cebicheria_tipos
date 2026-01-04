@@ -4576,16 +4576,160 @@ document.addEventListener('keydown', function(event) {
             seleccionarTipoPedido('recoger');
             seleccionarMetodoPago('efectivo');
         });
-        // SOLUCIÓN EXTREMA - Desactivar cierre automático
+       // ================================================
+// SOLUCIÓN DEFINITIVA - BLOQUEAR CIERRE AUTOMÁTICO
+// ================================================
+
+// 1. Sobrescribir los eventos de clic
 document.addEventListener('click', function(e) {
-    // Si el clic es en un botón del carrito, NO hacer nada
+    // Si el clic es en el fondo oscuro, cerrar
+    if (e.target.id === 'carrito-modal') {
+        cerrarCarrito();
+        return;
+    }
+    
+    // Si el clic es en un botón del carrito, NO hacer nada más
     if (e.target.closest('.cantidad-btn') || 
-        e.target.closest('.carrito-item-eliminar') ||
-        e.target.closest('.carrito-item')) {
+        e.target.closest('.carrito-item-eliminar')) {
         e.stopImmediatePropagation();
-        e.preventDefault();
+        e.stopPropagation();
+        
+        // Obtener información del botón
+        const button = e.target.closest('.cantidad-btn') || e.target.closest('.carrito-item-eliminar');
+        
+        // Si es botón de eliminar (✕)
+        if (button.classList.contains('carrito-item-eliminar')) {
+            const index = parseInt(button.getAttribute('data-index') || 
+                                 button.parentElement.getAttribute('data-index') || 
+                                 button.closest('.carrito-item').getAttribute('data-index'));
+            if (!isNaN(index)) {
+                eliminarDelCarrito(index);
+            }
+            return;
+        }
+        
+        // Si es botón +/-
+        if (button.classList.contains('cantidad-btn')) {
+            const carritoItem = button.closest('.carrito-item');
+            const index = parseInt(carritoItem.getAttribute('data-index'));
+            if (!isNaN(index)) {
+                const cambio = button.classList.contains('restar') ? -1 : 1;
+                modificarCantidadDirecto(index, cambio);
+            }
+        }
     }
 }, true);
+
+// 2. Función simplificada para modificar cantidad
+function modificarCantidadDirecto(index, cambio) {
+    if (carrito[index]) {
+        const nuevaCantidad = carrito[index].cantidad + cambio;
+        
+        if (nuevaCantidad <= 0) {
+            if (confirm(`¿Eliminar "${carrito[index].nombre}" del carrito?`)) {
+                carrito.splice(index, 1);
+            } else {
+                carrito[index].cantidad = 1;
+            }
+        } else {
+            carrito[index].cantidad = nuevaCantidad;
+        }
+        
+        actualizarCarrito();
+    }
+}
+
+// 3. Función simplificada para eliminar
+function eliminarDelCarritoDirecto(index) {
+    if (carrito[index]) {
+        if (confirm(`¿Eliminar "${carrito[index].nombre}" del carrito?`)) {
+            carrito.splice(index, 1);
+            actualizarCarrito();
+        }
+    }
+}
+
+// 4. Actualizar el HTML para usar data-index
+function actualizarCarrito() {
+    const carritoItems = document.getElementById('carrito-items');
+    const carritoVacio = document.getElementById('carrito-vacio');
+    const carritoResumen = document.getElementById('carrito-resumen');
+    const carritoBotones = document.getElementById('carrito-botones');
+    const sugerenciasContainer = document.getElementById('sugerencias-container');
+    const carritoContador = document.getElementById('carrito-contador');
+    const subtotalCarrito = document.getElementById('subtotal-carrito');
+    const totalCarrito = document.getElementById('total-carrito');
+    const envioCarrito = document.getElementById('envio-carrito');
+    
+    const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
+    carritoContador.textContent = totalItems;
+    
+    if (carrito.length === 0) {
+        carritoVacio.style.display = 'block';
+        carritoItems.innerHTML = '';
+        carritoResumen.style.display = 'none';
+        carritoBotones.style.display = 'none';
+        sugerenciasContainer.style.display = 'none';
+    } else {
+        carritoVacio.style.display = 'none';
+        carritoResumen.style.display = 'block';
+        carritoBotones.style.display = 'flex';
+        
+        let html = '';
+        let subtotal = 0;
+        
+        carrito.forEach((item, index) => {
+            const subtotalItem = item.precio * item.cantidad;
+            subtotal += subtotalItem;
+            
+            html += `
+                <div class="carrito-item" data-index="${index}">
+                    <div class="carrito-item-imagen">
+                        <img src="${obtenerImagenPlato(item.nombre)}" alt="${item.nombre}">
+                    </div>
+                    <div class="carrito-item-info">
+                        <div class="carrito-item-nombre">${item.nombre}</div>
+                        ${item.especificaciones ? `<div class="especificaciones-carrito">${item.especificaciones}</div>` : ''}
+                        <div class="carrito-item-precio">S/ ${item.precio.toFixed(2)} c/u</div>
+                    </div>
+                    <div class="carrito-item-cantidad">
+                        <button class="cantidad-btn restar" data-index="${index}">-</button>
+                        <span class="carrito-cantidad-numero">${item.cantidad}</span>
+                        <button class="cantidad-btn" data-index="${index}">+</button>
+                    </div>
+                    <div class="carrito-item-subtotal">S/ ${subtotalItem.toFixed(2)}</div>
+                    <button class="carrito-item-eliminar" data-index="${index}">✕</button>
+                </div>
+            `;
+        });
+        
+        carritoItems.innerHTML = html;
+        subtotalCarrito.textContent = `S/ ${subtotal.toFixed(2)}`;
+        envioCarrito.textContent = 'S/ 0.00';
+        totalCarrito.textContent = `S/ ${subtotal.toFixed(2)}`;
+        
+        mostrarSugerencias();
+    }
+    
+    localStorage.setItem('carritoTipos', JSON.stringify(carrito));
+}
+
+// 5. Quitar los onclick viejos de tu HTML
+// Busca en tu código donde generas los botones y QUITA los onclick:
+// - onclick="modificarCantidad(${index}, -1)" → déjalo vacío
+// - onclick="modificarCantidad(${index}, 1)" → déjalo vacío
+// - onclick="eliminarDelCarrito(${index})" → déjalo vacío
+
+// 6. Asegurar que el modal no se cierre con clics internos
+const carritoModal = document.getElementById('carrito-modal');
+if (carritoModal) {
+    carritoModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            cerrarCarrito();
+        }
+    });
+}
+        
     </script>
 </body>
 </html>
