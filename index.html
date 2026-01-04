@@ -3367,25 +3367,25 @@ function mostrarNotificacionAgregado(nombre) {
                     const subtotalItem = item.precio * item.cantidad;
                     subtotal += subtotalItem;
                     
-                    html += `
-                        <div class="carrito-item">
-                            <div class="carrito-item-imagen">
-                                <img src="${obtenerImagenPlato(item.nombre)}" alt="${item.nombre}">
-                            </div>
-                            <div class="carrito-item-info">
-                                <div class="carrito-item-nombre">${item.nombre}</div>
-                                ${item.especificaciones ? `<div class="especificaciones-carrito">${item.especificaciones}</div>` : ''}
-                                <div class="carrito-item-precio">S/ ${item.precio.toFixed(2)} c/u</div>
-                            </div>
-                            <div class="carrito-item-cantidad">
-                                <button class="cantidad-btn restar" onclick="modificarCantidad(${index}, -1)">-</button>
-                                <span class="carrito-cantidad-numero">${item.cantidad}</span>
-                                <button class="cantidad-btn" onclick="modificarCantidad(${index}, 1)">+</button>
-                            </div>
-                            <div class="carrito-item-subtotal">S/ ${subtotalItem.toFixed(2)}</div>
-                            <button class="carrito-item-eliminar" onclick="eliminarDelCarrito(${index})">✕</button>
-                        </div>
-                    `;
+                  html += `
+    <div class="carrito-item">
+        <div class="carrito-item-imagen">
+            <img src="${obtenerImagenPlato(item.nombre)}" alt="${item.nombre}">
+        </div>
+        <div class="carrito-item-info">
+            <div class="carrito-item-nombre">${item.nombre}</div>
+            ${item.especificaciones ? `<div class="especificaciones-carrito">${item.especificaciones}</div>` : ''}
+            <div class="carrito-item-precio">S/ ${item.precio.toFixed(2)} c/u</div>
+        </div>
+        <div class="carrito-item-cantidad">
+            <button class="cantidad-btn restar" onclick="modificarCantidad(${index}, -1); return false;">-</button>
+            <span class="carrito-cantidad-numero">${item.cantidad}</span>
+            <button class="cantidad-btn" onclick="modificarCantidad(${index}, 1); return false;">+</button>
+        </div>
+        <div class="carrito-item-subtotal">S/ ${subtotalItem.toFixed(2)}</div>
+ <button class="carrito-item-eliminar" onclick="eliminarDelCarrito(${index}); event.stopPropagation(); return false;">✕</button>
+    </div>
+`;
                 });
                 
                 carritoItems.innerHTML = html;
@@ -4459,22 +4459,50 @@ function cerrarCarrito() {
 }
 
 function modificarCantidad(index, cambio) {
+    // 1. EVITAR que el carrito se cierre
+    if (window.event) {
+        window.event.stopPropagation();
+        window.event.cancelBubble = true;
+    }
+    
     if (carrito[index]) {
-        carrito[index].cantidad += cambio;
+        // 2. Calcular nueva cantidad
+        const nuevaCantidad = carrito[index].cantidad + cambio;
         
-        if (carrito[index].cantidad <= 0) {
-            carrito.splice(index, 1);
+        // 3. Si va a llegar a 0, PREGUNTAR
+        if (nuevaCantidad <= 0) {
+            if (confirm(`¿Eliminar "${carrito[index].nombre}" del carrito?`)) {
+                carrito.splice(index, 1);
+            } else {
+                // Si dice NO, mantener en 1
+                carrito[index].cantidad = 1;
+            }
+        } else {
+            // 4. Actualizar normalmente
+            carrito[index].cantidad = nuevaCantidad;
         }
         
+        // 5. Actualizar el carrito
         actualizarCarrito();
     }
+    
+    // 6. IMPORTANTE: Retornar false
+    return false;
 }
 
 function eliminarDelCarrito(index) {
+    // Evitar que se cierre
+    if (window.event) {
+        window.event.stopPropagation();
+        window.event.cancelBubble = true;
+    }
+    
     if (confirm('¿Quieres eliminar este artículo del carrito?')) {
         carrito.splice(index, 1);
         actualizarCarrito();
     }
+    
+    return false;
 }
 
 // Cerrar carrito al hacer clic fuera
