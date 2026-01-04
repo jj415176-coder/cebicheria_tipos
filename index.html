@@ -1876,26 +1876,19 @@
                     </div>
                 </div>
                 
-                <!-- Sección de Delivery -->
-                <div id="seccion-delivery" style="display: none;">
-                    <div class="form-group">
-                        <label for="cliente-distrito">Distrito *</label>
-                        <select id="cliente-distrito" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px;" onchange="actualizarCostoDelivery()">
-                            <option value="">Selecciona tu distrito</option>
-                            <option value="Hospital Militar Reja Negra - S/ 0">Hospital Militar (Reja Negra - Av brasil)</option>
-                            <option value="Libre - S/ 5">Pueblo Libre — S/ 5</option>
-                           <option value="interdistrital-consultar-"> Interdistrital (S/ 7 a S/ 9 - Consultar)</option>
-                           <option value="otro">Otro distrito (Consultar disponibilidad)</option>
-                        </select>
-                        <div class="error-mensaje" id="error-distrito">Por favor selecciona tu distrito</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="cliente-direccion">Dirección completa *</label>
-                        <textarea id="cliente-direccion" placeholder="Calle, Número, Departamento, Referencia, Piso, etc." rows="3"></textarea>
-                        <div class="error-mensaje" id="error-direccion">Por favor ingresa tu dirección</div>
-                    </div>
-                </div>
+             <select id="cliente-distrito" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px;" onchange="actualizarCostoDelivery()">
+    <option value="">Selecciona tu distrito</option>
+    <option value="Hospital Militar Reja Negra - S/ 0">Hospital Militar (Reja Negra - Av brasil)</option>
+    <option value="Pueblo Libre - S/ 3">Pueblo Libre — S/ 3</option>
+    <option value="Jesus Maria - S/ 5">Jesús María — S/ 5</option>
+    <option value="Magdalena - S/ 5">Magdalena — S/ 5</option>
+    <option value="Breña - S/ 6">Breña — S/ 6</option>
+    <option value="Lince - S/ 7">Lince — S/ 7</option>
+    <option value="San Miguel - S/ 7">San Miguel — S/ 7</option>
+    <!-- AGREGAR ESTA LÍNEA -->
+    <option value="interdistrital-consultar">Interdistrital (Consultar precio)</option>
+    <option value="otro">Otro distrito (Consultar)</option>
+</select>
                 
                 <!-- Método de pago -->
                 <div class="form-group">
