@@ -1880,13 +1880,7 @@
     <option value="">Selecciona tu distrito</option>
     <option value="Hospital Militar Reja Negra - S/ 0">Hospital Militar (Reja Negra - Av brasil)</option>
     <option value="Pueblo Libre - S/ 3">Pueblo Libre — S/ 3</option>
-    <option value="Jesus Maria - S/ 5">Jesús María — S/ 5</option>
-    <option value="Magdalena - S/ 5">Magdalena — S/ 5</option>
-    <option value="Breña - S/ 6">Breña — S/ 6</option>
-    <option value="Lince - S/ 7">Lince — S/ 7</option>
-    <option value="San Miguel - S/ 7">San Miguel — S/ 7</option>
-    <!-- AGREGAR ESTA LÍNEA -->
-    <option value="interdistrital-consultar">Interdistrital (Consultar precio)</option>
+   <option value="interdistrital-consultar">Interdistrital (Consultar precio)</option>
     <option value="otro">Otro distrito (Consultar)</option>
 </select>
                 
@@ -3884,24 +3878,39 @@ function mostrarNotificacionAgregado(nombre) {
             actualizarTotalPedido();
         }
 
-    function actualizarTotalPedido() {
+   function actualizarTotalPedido() {
+    console.log('=== DEBUG actualizarTotalPedido ===');
+    
     const subtotalElement = document.getElementById('subtotal-pedido');
     const totalElement = document.getElementById('total-pedido');
     const costoDeliveryElement = document.getElementById('costo-delivery');
     
-    if (!subtotalElement || !totalElement || !costoDeliveryElement) return;
+    if (!subtotalElement || !totalElement || !costoDeliveryElement) {
+        console.error('Elementos no encontrados en actualizarTotalPedido');
+        return;
+    }
     
+    // Obtener subtotal
     const subtotalText = subtotalElement.textContent.replace('S/ ', '');
     const subtotal = parseFloat(subtotalText) || 0;
+    console.log('Subtotal:', subtotal);
     
-    // Si dice "Consultar", mostrar mensaje especial
-    if (costoDeliveryElement.textContent === 'Consultar') {
-        totalElement.innerHTML = `S/ ${subtotal.toFixed(2)} <span style="color: var(--ROJO); font-size: 0.9em;">+ delivery a consultar</span>`;
+    // Ver qué muestra el delivery
+    const deliveryText = costoDeliveryElement.textContent || costoDeliveryElement.innerText;
+    console.log('Texto delivery:', deliveryText);
+    
+    // Si contiene "CONSULTAR" (en mayúsculas o minúsculas)
+    if (deliveryText.toUpperCase().includes('CONSULTAR')) {
+        console.log('Delivery: CONSULTAR');
+        totalElement.innerHTML = `S/ ${subtotal.toFixed(2)} <span style="color: #d32f2f; font-size: 0.9em; font-weight: bold;">+ delivery a consultar</span>`;
     } else {
-        const deliveryText = costoDeliveryElement.textContent.replace('S/ ', '');
-        const delivery = parseFloat(deliveryText) || 0;
+        // Intentar extraer número
+        const match = deliveryText.match(/(\d+(\.\d+)?)/);
+        const delivery = match ? parseFloat(match[1]) : 0;
+        console.log('Delivery numérico:', delivery);
+        
         const total = subtotal + delivery;
-        totalElement.textContent = `S/ ${total.toFixed(2)}`;
+        totalElement.innerHTML = `S/ ${total.toFixed(2)}`;
     }
 }
         function resetearFormularioPedido() {
@@ -3967,59 +3976,46 @@ function mostrarNotificacionAgregado(nombre) {
             } else if (metodo === 'tarjeta') {
                 document.getElementById('campo-tarjeta').style.display = 'block';
             }
-         function actualizarCostoDelivery() {
+        function actualizarCostoDelivery() {
+    console.log('=== DEBUG actualizarCostoDelivery ===');
+    
     // 1. Obtener elementos
     const distritoSelect = document.getElementById('cliente-distrito');
-    const selectedValue = distritoSelect.value;
-    const costoDeliveryElement = document.getElementById('costo-delivery');
+    const costoElement = document.getElementById('costo-delivery');
     
-    // 2. Para DEBUG (opcional, quita después)
-    console.log('Distrito seleccionado:', selectedValue);
+    if (!distritoSelect || !costoElement) {
+        console.error('Elementos no encontrados');
+        return;
+    }
     
-    // 3. Actualizar en FORMULARIO
-    if (selectedValue === 'interdistrital-consultar' || selectedValue === 'otro') {
-        costoDeliveryElement.textContent = 'Consultar';
-        costoDeliveryElement.style.color = '#d32f2f'; // Rojo
-        costoDeliveryElement.style.fontWeight = 'bold';
-        costoDeliveryElement.style.backgroundColor = '#ffebee'; // Fondo rojo claro
-        costoDeliveryElement.style.padding = '2px 8px';
-        costoDeliveryElement.style.borderRadius = '4px';
+    const valorSeleccionado = distritoSelect.value;
+    console.log('Valor seleccionado:', valorSeleccionado);
+    
+    // 2. DECISIÓN: ¿Qué mostrar?
+    if (valorSeleccionado === 'interdistrital-consultar') {
+        console.log('Mostrando: CONSULTAR (Interdistrital)');
+        costoElement.innerHTML = '<span style="color: #d32f2f; font-weight: bold; background: #ffebee; padding: 2px 8px; border-radius: 4px;">CONSULTAR</span>';
     } 
-    else if (selectedValue && selectedValue.includes('S/')) {
-        const precioMatch = selectedValue.match(/S\/\s*(\d+)/);
+    else if (valorSeleccionado === 'otro') {
+        console.log('Mostrando: CONSULTAR (Otro)');
+        costoElement.innerHTML = '<span style="color: #d32f2f; font-weight: bold; background: #ffebee; padding: 2px 8px; border-radius: 4px;">CONSULTAR</span>';
+    }
+    else if (valorSeleccionado && valorSeleccionado.includes('S/')) {
+        // Extraer precio (ej: "Lince - S/ 7" → "7")
+        const precioMatch = valorSeleccionado.match(/S\/\s*(\d+)/);
         if (precioMatch) {
-            costoDeliveryElement.textContent = `S/ ${precioMatch[1]}`;
-            costoDeliveryElement.style.color = '';
-            costoDeliveryElement.style.fontWeight = '';
-            costoDeliveryElement.style.backgroundColor = '';
+            const precio = precioMatch[1];
+            console.log('Mostrando: S/', precio);
+            costoElement.innerHTML = `S/ ${precio}`;
         }
     }
     else {
-        costoDeliveryElement.textContent = 'S/ 0.00';
-        costoDeliveryElement.style.color = '';
-        costoDeliveryElement.style.fontWeight = '';
-        costoDeliveryElement.style.backgroundColor = '';
+        console.log('Mostrando: S/ 0.00 (sin selección)');
+        costoElement.innerHTML = 'S/ 0.00';
     }
     
-    // 4. Actualizar en RESUMEN DEL CARRITO (si está abierto)
-    const envioCarrito = document.getElementById('envio-carrito');
-    if (envioCarrito) {
-        if (selectedValue === 'interdistrital-consultar' || selectedValue === 'otro') {
-            envioCarrito.textContent = 'Consultar';
-            envioCarrito.style.color = 'var(--ROJO)';
-        } else if (selectedValue && selectedValue.includes('S/')) {
-            const precioMatch = selectedValue.match(/S\/\s*(\d+)/);
-            if (precioMatch) {
-                envioCarrito.textContent = `S/ ${precioMatch[1]}`;
-                envioCarrito.style.color = '';
-            }
-        } else {
-            envioCarrito.textContent = 'S/ 0.00';
-        }
-    }
-    
-    // 5. Actualizar total
-    actualizarTotalPedido();
+    // 3. Forzar actualización del total
+    setTimeout(actualizarTotalPedido, 10);
 }
 
         function calcularVuelto() {
@@ -4754,6 +4750,24 @@ if (carritoModal) {
         }
     });
 }
+            // Agrega esto TEMPORALMENTE al final de tu JavaScript para ver qué pasa
+document.addEventListener('DOMContentLoaded', function() {
+    // Agregar un log cuando se cambie el select
+    const distritoSelect = document.getElementById('cliente-distrito');
+    if (distritoSelect) {
+        distritoSelect.addEventListener('change', function() {
+            console.log('🔍 SELECT CAMBIADO:');
+            console.log('Valor:', this.value);
+            console.log('Texto visible:', this.options[this.selectedIndex].text);
+            
+            // Forzar ejecución
+            actualizarCostoDelivery();
+        });
+        
+        // También forzar ejecución inicial
+        setTimeout(actualizarCostoDelivery, 100);
+    }
+});
         
     </script>
 </body>
