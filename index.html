@@ -4750,25 +4750,6 @@ if (carritoModal) {
         }
     });
 }
-            // Agrega esto TEMPORALMENTE al final de tu JavaScript para ver qué pasa
-document.addEventListener('DOMContentLoaded', function() {
-    // Agregar un log cuando se cambie el select
-    const distritoSelect = document.getElementById('cliente-distrito');
-    if (distritoSelect) {
-        distritoSelect.addEventListener('change', function() {
-            console.log('🔍 SELECT CAMBIADO:');
-            console.log('Valor:', this.value);
-            console.log('Texto visible:', this.options[this.selectedIndex].text);
-            
-            // Forzar ejecución
-            actualizarCostoDelivery();
-        });
-        
-        // También forzar ejecución inicial
-        setTimeout(actualizarCostoDelivery, 100);
-    }
-});
-        
     </script>
 </body>
 </html>
