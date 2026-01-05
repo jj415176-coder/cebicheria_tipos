@@ -3338,7 +3338,6 @@ function modificarCantidad(index, cambio) {
         
         actualizarCarrito();
     }
-    return false;
 }
 
 function eliminarDelCarrito(index) {
@@ -3346,7 +3345,6 @@ function eliminarDelCarrito(index) {
         carrito.splice(index, 1);
         actualizarCarrito();
     }
-    return false;
 }
 
 function vaciarCarrito() {
@@ -3423,7 +3421,6 @@ function obtenerImagenPlato(nombre) {
         }
     }
     
-    // Imagen por defecto
     return 'https://i.ibb.co/mCgLnpH8/imagen-2025-08-22-005748205.png';
 }
 
@@ -3436,6 +3433,7 @@ function actualizarCarrito() {
     const carritoContador = document.getElementById('carrito-contador');
     const subtotalCarrito = document.getElementById('subtotal-carrito');
     const totalCarrito = document.getElementById('total-carrito');
+    const envioCarrito = document.getElementById('envio-carrito');
     
     const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
     carritoContador.textContent = totalItems;
@@ -3481,6 +3479,7 @@ function actualizarCarrito() {
         
         carritoItems.innerHTML = html;
         subtotalCarrito.textContent = `S/ ${subtotal.toFixed(2)}`;
+        envioCarrito.textContent = 'S/ 0.00';
         totalCarrito.textContent = `S/ ${subtotal.toFixed(2)}`;
         
         mostrarSugerencias();
@@ -3496,68 +3495,70 @@ function mostrarSugerencias() {
     const sugerenciasContainer = document.getElementById('sugerencias-container');
     const sugerenciasGrid = document.querySelector('.sugerencias-grid');
     
-    const tieneAcompañamientos = carrito.some(item => 
-        item.nombre.includes('Arroz') || 
-        item.nombre.includes('Chifles') || 
-        item.nombre.includes('Choclo') || 
-        item.nombre.includes('Canchita') ||
-        item.nombre.includes('Yucas')
-    );
-    
-    const tieneBebidas = carrito.some(item => 
-        item.nombre.includes('Chicha') || 
-        item.nombre.includes('Limonada') || 
-        item.nombre.includes('Maracuyá')
-    );
-    
-    if (!tieneAcompañamientos || !tieneBebidas) {
-        sugerenciasContainer.style.display = 'block';
-        
-        let sugerenciasHTML = '';
-        const sugerencias = [];
-        
-        if (!tieneAcompañamientos) {
-            sugerencias.push(
-                {nombre: 'Porción de Arroz', precio: 6, imagen: 'https://i.ibb.co/FqHQdDvv/image.png'},
-                {nombre: 'Chifles', precio: 6, imagen: 'https://i.ibb.co/Lh5g8Hnh/unnamed.png'}
-            );
-        }
-        
-        if (!tieneBebidas) {
-            sugerencias.push(
-                {nombre: 'Chicha Morada - 1 Litro', precio: 16, imagen: 'https://i.ibb.co/kVTSk7ct/image.png'},
-                {nombre: 'Limonada - 1 Litro', precio: 16, imagen: 'https://i.ibb.co/WNHk15YQ/image.png'},
-                {nombre: 'Maracuyá - 1 Litro', precio: 16, imagen: 'https://i.ibb.co/7N1NRkSH/image.png'}
-            );
-        }
-        
-        const tieneCebiche = carrito.some(item => 
-            item.nombre.toLowerCase().includes('cebiche')
+    if (sugerenciasGrid) {
+        const tieneAcompañamientos = carrito.some(item => 
+            item.nombre.includes('Arroz') || 
+            item.nombre.includes('Chifles') || 
+            item.nombre.includes('Choclo') || 
+            item.nombre.includes('Canchita') ||
+            item.nombre.includes('Yucas')
         );
         
-        if (tieneCebiche && !carrito.some(item => item.nombre.includes('Leche de tigre'))) {
-            sugerencias.push(
-                {nombre: 'Leche de tigre', precio: 16, imagen: 'https://i.ibb.co/ZzchbZnF/image.png'}
+        const tieneBebidas = carrito.some(item => 
+            item.nombre.includes('Chicha') || 
+            item.nombre.includes('Limonada') || 
+            item.nombre.includes('Maracuyá')
+        );
+        
+        if (!tieneAcompañamientos || !tieneBebidas) {
+            sugerenciasContainer.style.display = 'block';
+            
+            let sugerenciasHTML = '';
+            const sugerencias = [];
+            
+            if (!tieneAcompañamientos) {
+                sugerencias.push(
+                    {nombre: 'Porción de Arroz', precio: 6, imagen: 'https://i.ibb.co/FqHQdDvv/image.png'},
+                    {nombre: 'Chifles', precio: 6, imagen: 'https://i.ibb.co/Lh5g8Hnh/unnamed.png'}
+                );
+            }
+            
+            if (!tieneBebidas) {
+                sugerencias.push(
+                    {nombre: 'Chicha Morada - 1 Litro', precio: 16, imagen: 'https://i.ibb.co/kVTSk7ct/image.png'},
+                    {nombre: 'Limonada - 1 Litro', precio: 16, imagen: 'https://i.ibb.co/WNHk15YQ/image.png'},
+                    {nombre: 'Maracuyá - 1 Litro', precio: 16, imagen: 'https://i.ibb.co/7N1NRkSH/image.png'}
+                );
+            }
+            
+            const tieneCebiche = carrito.some(item => 
+                item.nombre.toLowerCase().includes('cebiche')
             );
+            
+            if (tieneCebiche && !carrito.some(item => item.nombre.includes('Leche de tigre'))) {
+                sugerencias.push(
+                    {nombre: 'Leche de tigre', precio: 16, imagen: 'https://i.ibb.co/ZzchbZnF/image.png'}
+                );
+            }
+            
+            sugerencias.forEach((sugerencia) => {
+                sugerenciasHTML += `
+                    <div class="sugerencia-item" onclick="agregarSugerencia('${sugerencia.nombre}', ${sugerencia.precio})">
+                        <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
+                            <img src="${sugerencia.imagen}" alt="${sugerencia.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="sugerencia-info">
+                            <div class="sugerencia-nombre">${sugerencia.nombre}</div>
+                            <div class="sugerencia-precio">S/ ${sugerencia.precio.toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            sugerenciasGrid.innerHTML = sugerenciasHTML;
+        } else {
+            sugerenciasContainer.style.display = 'none';
         }
-        
-        sugerencias.forEach((sugerencia) => {
-            sugerenciasHTML += `
-                <div class="sugerencia-item" onclick="agregarSugerencia('${sugerencia.nombre}', ${sugerencia.precio})">
-                    <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
-                        <img src="${sugerencia.imagen}" alt="${sugerencia.nombre}" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="sugerencia-info">
-                        <div class="sugerencia-nombre">${sugerencia.nombre}</div>
-                        <div class="sugerencia-precio">S/ ${sugerencia.precio.toFixed(2)}</div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        sugerenciasGrid.innerHTML = sugerenciasHTML;
-    } else {
-        sugerenciasContainer.style.display = 'none';
     }
 }
 
@@ -3595,136 +3596,137 @@ function abrirModalPersonalizacion(nombre, precio, opciones) {
     document.getElementById('especificaciones-personalizacion').value = '';
     
     const opcionesContainer = document.getElementById('opciones-container');
-    opcionesContainer.innerHTML = '';
-    
-    if (opcionesModal.length > 0) {
-        const categorias = {
-            'Picante': {opciones: ['Sin ají', 'Poco ají', 'Picante'], emojis: ['🚫', '🌶️', '🔥']},
-            'Cocción': {opciones: ['Plancha', 'Frito'], emojis: ['🍳', '🍟']},
-            'Tipo': {opciones: ['Cuadril', 'Pollo'], emojis: ['🥩', '🍗']}
-        };
+    if (opcionesContainer) {
+        opcionesContainer.innerHTML = '';
         
-        Object.keys(categorias).forEach(categoriaNombre => {
-            const categoria = categorias[categoriaNombre];
-            const mostrarCategoria = opcionesModal.some(opcion => 
-                categoria.opciones.some(opcionCat => 
-                    opcion.toLowerCase().includes(opcionCat.toLowerCase())
-                )
-            );
+        if (opcionesModal.length > 0) {
+            const categorias = {
+                'Picante': {opciones: ['Sin ají', 'Poco ají', 'Picante'], emojis: ['🚫', '🌶️', '🔥']},
+                'Cocción': {opciones: ['Plancha', 'Frito'], emojis: ['🍳', '🍟']},
+                'Tipo': {opciones: ['Cuadril', 'Pollo'], emojis: ['🥩', '🍗']}
+            };
             
-            if (mostrarCategoria) {
-                const seccion = document.createElement('div');
-                seccion.style.marginBottom = '20px';
-                seccion.style.paddingBottom = '10px';
-                seccion.style.borderBottom = '1px solid #eee';
+            Object.keys(categorias).forEach(categoriaNombre => {
+                const categoria = categorias[categoriaNombre];
+                const mostrarCategoria = opcionesModal.some(opcion => 
+                    categoria.opciones.some(opcionCat => 
+                        opcion.toLowerCase().includes(opcionCat.toLowerCase())
+                    )
+                );
                 
-                const tituloCategoria = document.createElement('div');
-                tituloCategoria.style.fontSize = '0.95rem';
-                tituloCategoria.style.fontWeight = '700';
-                tituloCategoria.style.color = 'var(--VERDE)';
-                tituloCategoria.style.marginBottom = '8px';
-                tituloCategoria.textContent = categoriaNombre + ':';
-                
-                const opcionesContainerCat = document.createElement('div');
-                opcionesContainerCat.style.display = 'flex';
-                opcionesContainerCat.style.gap = '10px';
-                opcionesContainerCat.style.flexWrap = 'wrap';
-                
-                categoria.opciones.forEach((opcion, index) => {
-                    if (opcionesModal.some(op => op.toLowerCase().includes(opcion.toLowerCase()))) {
-                        const opcionElement = document.createElement('div');
-                        opcionElement.className = 'opcion-personalizacion';
-                        opcionElement.dataset.categoria = categoriaNombre;
-                        
-                        const emoji = categoria.emojis && categoria.emojis[index] ? categoria.emojis[index] : '';
-                        
-                        opcionElement.style.flex = '1';
-                        opcionElement.style.minWidth = '100px';
-                        opcionElement.style.padding = '12px 8px';
-                        opcionElement.style.textAlign = 'center';
-                        
-                        opcionElement.innerHTML = `
-                            ${emoji ? `<div style="font-size: 1.3rem; margin-bottom: 5px;">${emoji}</div>` : ''}
-                            <div style="font-weight: 600; font-size: 0.9rem;">${opcion}</div>
-                        `;
-                        
-                        opcionElement.onclick = () => {
-                            document.querySelectorAll(`.opcion-personalizacion[data-categoria="${categoriaNombre}"]`).forEach(el => {
-                                el.classList.remove('seleccionado');
-                            });
-                            opcionElement.classList.add('seleccionado');
-                            opcionesSeleccionadas[categoriaNombre] = opcion;
-                        };
-                        
-                        opcionesContainerCat.appendChild(opcionElement);
-                    }
-                });
-                
-                seccion.appendChild(tituloCategoria);
-                seccion.appendChild(opcionesContainerCat);
-                opcionesContainer.appendChild(seccion);
-            }
-        });
-    }
-    
-    // Opciones básicas para todos los platos
-    const seccionBasica = document.createElement('div');
-    seccionBasica.style.marginBottom = '20px';
-    
-    const tituloBasica = document.createElement('div');
-    tituloBasica.style.fontSize = '0.95rem';
-    tituloBasica.style.fontWeight = '700';
-    tituloBasica.style.color = 'var(--VERDE)';
-    tituloBasica.style.marginBottom = '8px';
-    tituloBasica.textContent = 'Otras preferencias:';
-    
-    const opcionesBasicasContainer = document.createElement('div');
-    opcionesBasicasContainer.style.display = 'flex';
-    opcionesBasicasContainer.style.gap = '10px';
-    opcionesBasicasContainer.style.flexWrap = 'wrap';
-    
-    const opcionesBasicas = [
-        {texto: 'Sin cebolla', emoji: '🚫'},
-        {texto: 'Sin choclo', emoji: '🌽'},
-        {texto: 'Extra picante', emoji: '🌶️🌶️'}
-    ];
-    
-    opcionesBasicas.forEach((opcion) => {
-        const opcionElement = document.createElement('div');
-        opcionElement.className = 'opcion-personalizacion';
-        opcionElement.dataset.categoria = 'Basicas';
-        opcionElement.style.flex = '1';
-        opcionElement.style.minWidth = '100px';
-        opcionElement.style.padding = '10px 5px';
-        opcionElement.style.textAlign = 'center';
-        
-        opcionElement.innerHTML = `
-            <div style="font-size: 1.2rem; margin-bottom: 3px;">${opcion.emoji}</div>
-            <div style="font-weight: 600; font-size: 0.85rem;">${opcion.texto}</div>
-        `;
-        
-        opcionElement.onclick = () => {
-            opcionElement.classList.toggle('seleccionado');
-            
-            if (!opcionesSeleccionadas['Basicas']) {
-                opcionesSeleccionadas['Basicas'] = [];
-            }
-            
-            if (opcionElement.classList.contains('seleccionado')) {
-                if (!opcionesSeleccionadas['Basicas'].includes(opcion.texto)) {
-                    opcionesSeleccionadas['Basicas'].push(opcion.texto);
+                if (mostrarCategoria) {
+                    const seccion = document.createElement('div');
+                    seccion.style.marginBottom = '20px';
+                    seccion.style.paddingBottom = '10px';
+                    seccion.style.borderBottom = '1px solid #eee';
+                    
+                    const tituloCategoria = document.createElement('div');
+                    tituloCategoria.style.fontSize = '0.95rem';
+                    tituloCategoria.style.fontWeight = '700';
+                    tituloCategoria.style.color = 'var(--VERDE)';
+                    tituloCategoria.style.marginBottom = '8px';
+                    tituloCategoria.textContent = categoriaNombre + ':';
+                    
+                    const opcionesContainerCat = document.createElement('div');
+                    opcionesContainerCat.style.display = 'flex';
+                    opcionesContainerCat.style.gap = '10px';
+                    opcionesContainerCat.style.flexWrap = 'wrap';
+                    
+                    categoria.opciones.forEach((opcion, index) => {
+                        if (opcionesModal.some(op => op.toLowerCase().includes(opcion.toLowerCase()))) {
+                            const opcionElement = document.createElement('div');
+                            opcionElement.className = 'opcion-personalizacion';
+                            opcionElement.dataset.categoria = categoriaNombre;
+                            
+                            const emoji = categoria.emojis && categoria.emojis[index] ? categoria.emojis[index] : '';
+                            
+                            opcionElement.style.flex = '1';
+                            opcionElement.style.minWidth = '100px';
+                            opcionElement.style.padding = '12px 8px';
+                            opcionElement.style.textAlign = 'center';
+                            
+                            opcionElement.innerHTML = `
+                                ${emoji ? `<div style="font-size: 1.3rem; margin-bottom: 5px;">${emoji}</div>` : ''}
+                                <div style="font-weight: 600; font-size: 0.9rem;">${opcion}</div>
+                            `;
+                            
+                            opcionElement.onclick = () => {
+                                document.querySelectorAll(`.opcion-personalizacion[data-categoria="${categoriaNombre}"]`).forEach(el => {
+                                    el.classList.remove('seleccionado');
+                                });
+                                opcionElement.classList.add('seleccionado');
+                                opcionesSeleccionadas[categoriaNombre] = opcion;
+                            };
+                            
+                            opcionesContainerCat.appendChild(opcionElement);
+                        }
+                    });
+                    
+                    seccion.appendChild(tituloCategoria);
+                    seccion.appendChild(opcionesContainerCat);
+                    opcionesContainer.appendChild(seccion);
                 }
-            } else {
-                opcionesSeleccionadas['Basicas'] = opcionesSeleccionadas['Basicas'].filter(item => item !== opcion.texto);
-            }
-        };
+            });
+        }
         
-        opcionesBasicasContainer.appendChild(opcionElement);
-    });
-    
-    seccionBasica.appendChild(tituloBasica);
-    seccionBasica.appendChild(opcionesBasicasContainer);
-    opcionesContainer.appendChild(seccionBasica);
+        const seccionBasica = document.createElement('div');
+        seccionBasica.style.marginBottom = '20px';
+        
+        const tituloBasica = document.createElement('div');
+        tituloBasica.style.fontSize = '0.95rem';
+        tituloBasica.style.fontWeight = '700';
+        tituloBasica.style.color = 'var(--VERDE)';
+        tituloBasica.style.marginBottom = '8px';
+        tituloBasica.textContent = 'Otras preferencias:';
+        
+        const opcionesBasicasContainer = document.createElement('div');
+        opcionesBasicasContainer.style.display = 'flex';
+        opcionesBasicasContainer.style.gap = '10px';
+        opcionesBasicasContainer.style.flexWrap = 'wrap';
+        
+        const opcionesBasicas = [
+            {texto: 'Sin cebolla', emoji: '🚫'},
+            {texto: 'Sin choclo', emoji: '🌽'},
+            {texto: 'Extra picante', emoji: '🌶️🌶️'}
+        ];
+        
+        opcionesBasicas.forEach((opcion) => {
+            const opcionElement = document.createElement('div');
+            opcionElement.className = 'opcion-personalizacion';
+            opcionElement.dataset.categoria = 'Basicas';
+            opcionElement.style.flex = '1';
+            opcionElement.style.minWidth = '100px';
+            opcionElement.style.padding = '10px 5px';
+            opcionElement.style.textAlign = 'center';
+            
+            opcionElement.innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 3px;">${opcion.emoji}</div>
+                <div style="font-weight: 600; font-size: 0.85rem;">${opcion.texto}</div>
+            `;
+            
+            opcionElement.onclick = () => {
+                opcionElement.classList.toggle('seleccionado');
+                
+                if (!opcionesSeleccionadas['Basicas']) {
+                    opcionesSeleccionadas['Basicas'] = [];
+                }
+                
+                if (opcionElement.classList.contains('seleccionado')) {
+                    if (!opcionesSeleccionadas['Basicas'].includes(opcion.texto)) {
+                        opcionesSeleccionadas['Basicas'].push(opcion.texto);
+                    }
+                } else {
+                    opcionesSeleccionadas['Basicas'] = opcionesSeleccionadas['Basicas'].filter(item => item !== opcion.texto);
+                }
+            };
+            
+            opcionesBasicasContainer.appendChild(opcionElement);
+        });
+        
+        seccionBasica.appendChild(tituloBasica);
+        seccionBasica.appendChild(opcionesBasicasContainer);
+        opcionesContainer.appendChild(seccionBasica);
+    }
     
     document.getElementById('modal-personalizacion').style.display = 'flex';
 }
@@ -3735,7 +3737,6 @@ function confirmarPersonalizacion() {
         return;
     }
     
-    // Verificar nivel de ají para platos que lo requieren
     const requiereNivelAji = platoActual.includes('Cebiche') || 
                             platoActual.includes('cebiche') ||
                             platoActual.includes('Tiradito') ||
@@ -3753,7 +3754,6 @@ function confirmarPersonalizacion() {
     const especificacionesInput = document.getElementById('especificaciones-personalizacion').value;
     let opcionesTexto = [];
     
-    // Agregar opciones seleccionadas
     Object.keys(opcionesSeleccionadas).forEach(categoria => {
         if (Array.isArray(opcionesSeleccionadas[categoria])) {
             opcionesTexto = opcionesTexto.concat(opcionesSeleccionadas[categoria]);
@@ -3799,124 +3799,123 @@ function abrirModalCombinadoMarino(nombre, precio) {
     document.getElementById('especificaciones-personalizacion').value = '';
 
     const opcionesContainer = document.getElementById('opciones-container');
-    opcionesContainer.innerHTML = '';
+    if (opcionesContainer) {
+        opcionesContainer.innerHTML = '';
 
-    // Sección para tipo de chaufa (si aplica)
-    if (nombre.includes('chaufa') || nombre.includes('Chaufa') || 
-        nombre === 'Doble Marino 2' || nombre === 'Triple Marino 3' || 
-        nombre === 'Triple Marino 4' || nombre === 'Ronda Marina 3' || 
-        nombre === 'Ronda Marina 4') {
+        if (nombre.includes('chaufa') || nombre.includes('Chaufa') || 
+            nombre === 'Doble Marino 2' || nombre === 'Triple Marino 3' || 
+            nombre === 'Triple Marino 4' || nombre === 'Ronda Marina 3' || 
+            nombre === 'Ronda Marina 4') {
+            
+            const seccionChaufa = document.createElement('div');
+            seccionChaufa.style.marginBottom = '20px';
+            
+            const tituloChaufa = document.createElement('div');
+            tituloChaufa.style.fontSize = '0.95rem';
+            tituloChaufa.style.fontWeight = '700';
+            tituloChaufa.style.color = 'var(--VERDE)';
+            tituloChaufa.style.marginBottom = '8px';
+            tituloChaufa.innerHTML = `🍚 Tipo de Chaufa <span style="color: var(--ROJO);">*</span>`;
+            
+            const opcionesChaufaContainer = document.createElement('div');
+            opcionesChaufaContainer.style.display = 'flex';
+            opcionesChaufaContainer.style.flexWrap = 'wrap';
+            opcionesChaufaContainer.style.gap = '10px';
+            
+            const opcionesChaufa = [
+                {texto: 'Chaufa de Pescado', emoji: '🐟'},
+                {texto: 'Chaufa de Mariscos', emoji: '🦐'}
+            ];
+            
+            opcionesChaufa.forEach((opcion) => {
+                const opcionElement = document.createElement('div');
+                opcionElement.className = 'opcion-personalizacion';
+                opcionElement.dataset.categoria = 'Chaufa';
+                opcionElement.style.flex = '1';
+                opcionElement.style.minWidth = '140px';
+                opcionElement.style.padding = '12px 5px';
+                opcionElement.style.textAlign = 'center';
+                
+                opcionElement.innerHTML = `
+                    <div style="font-size: 1.2rem;">${opcion.emoji}</div>
+                    <div style="font-weight: 600; font-size: 0.85rem;">${opcion.texto}</div>
+                `;
+                
+                opcionElement.onclick = () => {
+                    document.querySelectorAll('.opcion-personalizacion[data-categoria="Chaufa"]').forEach(el => {
+                        el.classList.remove('seleccionado');
+                    });
+                    opcionElement.classList.add('seleccionado');
+                    opcionesSeleccionadas['Chaufa'] = opcion.texto;
+                };
+                
+                opcionesChaufaContainer.appendChild(opcionElement);
+            });
+            
+            seccionChaufa.appendChild(tituloChaufa);
+            seccionChaufa.appendChild(opcionesChaufaContainer);
+            opcionesContainer.appendChild(seccionChaufa);
+        }
+
+        const seccionAji = document.createElement('div');
+        seccionAji.style.marginBottom = '20px';
         
-        const seccionChaufa = document.createElement('div');
-        seccionChaufa.style.marginBottom = '20px';
+        const tituloAji = document.createElement('div');
+        tituloAji.style.fontSize = '0.95rem';
+        tituloAji.style.fontWeight = '700';
+        tituloAji.style.color = 'var(--VERDE)';
+        tituloAji.style.marginBottom = '8px';
+        tituloAji.innerHTML = `🌶️ Nivel de Ají <span style="color: var(--ROJO);">*</span>`;
         
-        const tituloChaufa = document.createElement('div');
-        tituloChaufa.style.fontSize = '0.95rem';
-        tituloChaufa.style.fontWeight = '700';
-        tituloChaufa.style.color = 'var(--VERDE)';
-        tituloChaufa.style.marginBottom = '8px';
-        tituloChaufa.innerHTML = `🍚 Tipo de Chaufa <span style="color: var(--ROJO);">*</span>`;
+        const opcionesAjiContainer = document.createElement('div');
+        opcionesAjiContainer.style.display = 'flex';
+        opcionesAjiContainer.style.flexWrap = 'wrap';
+        opcionesAjiContainer.style.gap = '10px';
         
-        const opcionesChaufaContainer = document.createElement('div');
-        opcionesChaufaContainer.style.display = 'flex';
-        opcionesChaufaContainer.style.flexWrap = 'wrap';
-        opcionesChaufaContainer.style.gap = '10px';
-        
-        const opcionesChaufa = [
-            {texto: 'Chaufa de Pescado', emoji: '🐟'},
-            {texto: 'Chaufa de Mariscos', emoji: '🦐'}
+        const opcionesAji = [
+            {texto: 'Sin ají', emoji: '🚫', desc: 'Sin picante'},
+            {texto: 'Poco ají', emoji: '🌶️', desc: 'Suave'},
+            {texto: 'Picante', emoji: '🔥', desc: 'Bien picante'}
         ];
         
-        opcionesChaufa.forEach((opcion) => {
+        opcionesAji.forEach((opcion) => {
             const opcionElement = document.createElement('div');
             opcionElement.className = 'opcion-personalizacion';
-            opcionElement.dataset.categoria = 'Chaufa';
+            opcionElement.dataset.categoria = 'Picante';
             opcionElement.style.flex = '1';
-            opcionElement.style.minWidth = '140px';
-            opcionElement.style.padding = '12px 5px';
+            opcionElement.style.minWidth = '100px';
+            opcionElement.style.padding = '10px 5px';
             opcionElement.style.textAlign = 'center';
             
             opcionElement.innerHTML = `
                 <div style="font-size: 1.2rem;">${opcion.emoji}</div>
-                <div style="font-weight: 600; font-size: 0.85rem;">${opcion.texto}</div>
+                <div style="font-weight: 600; font-size: 0.8rem;">${opcion.texto}</div>
+                <div style="font-size: 0.7rem; color: #666;">${opcion.desc}</div>
             `;
             
             opcionElement.onclick = () => {
-                document.querySelectorAll('.opcion-personalizacion[data-categoria="Chaufa"]').forEach(el => {
+                document.querySelectorAll('.opcion-personalizacion[data-categoria="Picante"]').forEach(el => {
                     el.classList.remove('seleccionado');
                 });
                 opcionElement.classList.add('seleccionado');
-                opcionesSeleccionadas['Chaufa'] = opcion.texto;
+                opcionesSeleccionadas['Picante'] = opcion.texto;
             };
             
-            opcionesChaufaContainer.appendChild(opcionElement);
+            opcionesAjiContainer.appendChild(opcionElement);
+            
+            if (opcion.texto === 'Poco ají') {
+                setTimeout(() => {
+                    opcionElement.classList.add('seleccionado');
+                    opcionesSeleccionadas['Picante'] = 'Poco ají';
+                }, 100);
+            }
         });
         
-        seccionChaufa.appendChild(tituloChaufa);
-        seccionChaufa.appendChild(opcionesChaufaContainer);
-        opcionesContainer.appendChild(seccionChaufa);
+        seccionAji.appendChild(tituloAji);
+        seccionAji.appendChild(opcionesAjiContainer);
+        opcionesContainer.appendChild(seccionAji);
     }
-
-    // Sección para nivel de ají
-    const seccionAji = document.createElement('div');
-    seccionAji.style.marginBottom = '20px';
     
-    const tituloAji = document.createElement('div');
-    tituloAji.style.fontSize = '0.95rem';
-    tituloAji.style.fontWeight = '700';
-    tituloAji.style.color = 'var(--VERDE)';
-    tituloAji.style.marginBottom = '8px';
-    tituloAji.innerHTML = `🌶️ Nivel de Ají <span style="color: var(--ROJO);">*</span>`;
-    
-    const opcionesAjiContainer = document.createElement('div');
-    opcionesAjiContainer.style.display = 'flex';
-    opcionesAjiContainer.style.flexWrap = 'wrap';
-    opcionesAjiContainer.style.gap = '10px';
-    
-    const opcionesAji = [
-        {texto: 'Sin ají', emoji: '🚫', desc: 'Sin picante'},
-        {texto: 'Poco ají', emoji: '🌶️', desc: 'Suave'},
-        {texto: 'Picante', emoji: '🔥', desc: 'Bien picante'}
-    ];
-    
-    opcionesAji.forEach((opcion) => {
-        const opcionElement = document.createElement('div');
-        opcionElement.className = 'opcion-personalizacion';
-        opcionElement.dataset.categoria = 'Picante';
-        opcionElement.style.flex = '1';
-        opcionElement.style.minWidth = '100px';
-        opcionElement.style.padding = '10px 5px';
-        opcionElement.style.textAlign = 'center';
-        
-        opcionElement.innerHTML = `
-            <div style="font-size: 1.2rem;">${opcion.emoji}</div>
-            <div style="font-weight: 600; font-size: 0.8rem;">${opcion.texto}</div>
-            <div style="font-size: 0.7rem; color: #666;">${opcion.desc}</div>
-        `;
-        
-        opcionElement.onclick = () => {
-            document.querySelectorAll('.opcion-personalizacion[data-categoria="Picante"]').forEach(el => {
-                el.classList.remove('seleccionado');
-            });
-            opcionElement.classList.add('seleccionado');
-            opcionesSeleccionadas['Picante'] = opcion.texto;
-        };
-        
-        opcionesAjiContainer.appendChild(opcionElement);
-        
-        // Seleccionar "Poco ají" por defecto
-        if (opcion.texto === 'Poco ají') {
-            setTimeout(() => {
-                opcionElement.classList.add('seleccionado');
-                opcionesSeleccionadas['Picante'] = 'Poco ají';
-            }, 100);
-        }
-    });
-    
-    seccionAji.appendChild(tituloAji);
-    seccionAji.appendChild(opcionesAjiContainer);
-    opcionesContainer.appendChild(seccionAji);
-
     document.getElementById('modal-personalizacion').style.display = 'flex';
 }
 
@@ -3933,11 +3932,17 @@ function mostrarFormularioPedido() {
     actualizarResumenPedido();
     resetearFormularioPedido();
     
-    document.getElementById('modal-formulario-pedido').style.display = 'block';
+    const modalForm = document.getElementById('modal-formulario-pedido');
+    if (modalForm) {
+        modalForm.style.display = 'block';
+    }
 }
 
 function cerrarFormularioPedido() {
-    document.getElementById('modal-formulario-pedido').style.display = 'none';
+    const modalForm = document.getElementById('modal-formulario-pedido');
+    if (modalForm) {
+        modalForm.style.display = 'none';
+    }
     limpiarErrores();
 }
 
@@ -3945,28 +3950,30 @@ function actualizarResumenPedido() {
     const detallesResumen = document.getElementById('detalles-resumen');
     const subtotalElement = document.getElementById('subtotal-pedido');
     
-    let html = '';
-    let subtotal = 0;
-    
-    carrito.forEach(item => {
-        const itemTotal = item.precio * item.cantidad;
-        subtotal += itemTotal;
+    if (detallesResumen && subtotalElement) {
+        let html = '';
+        let subtotal = 0;
         
-        html += `
-            <div style="margin-bottom: 5px;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span>${item.cantidad} x ${item.nombre}</span>
-                    <span>S/ ${itemTotal.toFixed(2)}</span>
+        carrito.forEach(item => {
+            const itemTotal = item.precio * item.cantidad;
+            subtotal += itemTotal;
+            
+            html += `
+                <div style="margin-bottom: 5px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>${item.cantidad} x ${item.nombre}</span>
+                        <span>S/ ${itemTotal.toFixed(2)}</span>
+                    </div>
+                    ${item.especificaciones ? `<div style="font-size: 0.8rem; color: #666; padding-left: 1rem;">→ ${item.especificaciones}</div>` : ''}
                 </div>
-                ${item.especificaciones ? `<div style="font-size: 0.8rem; color: #666; padding-left: 1rem;">→ ${item.especificaciones}</div>` : ''}
-            </div>
-        `;
-    });
-    
-    detallesResumen.innerHTML = html;
-    subtotalElement.textContent = `S/ ${subtotal.toFixed(2)}`;
-    
-    actualizarTotalPedido();
+            `;
+        });
+        
+        detallesResumen.innerHTML = html;
+        subtotalElement.textContent = `S/ ${subtotal.toFixed(2)}`;
+        
+        actualizarTotalPedido();
+    }
 }
 
 function actualizarTotalPedido() {
@@ -3974,18 +3981,20 @@ function actualizarTotalPedido() {
     const totalElement = document.getElementById('total-pedido');
     const costoDeliveryElement = document.getElementById('costo-delivery');
     
-    const subtotalText = subtotalElement.textContent.replace('S/ ', '');
-    const subtotal = parseFloat(subtotalText) || 0;
-    
-    const deliveryText = costoDeliveryElement.textContent || costoDeliveryElement.innerText;
-    
-    if (deliveryText.toUpperCase().includes('CONSULTAR')) {
-        totalElement.innerHTML = `S/ ${subtotal.toFixed(2)} <span style="color: #d32f2f; font-size: 0.9em; font-weight: bold;">+ delivery a consultar</span>`;
-    } else {
-        const match = deliveryText.match(/(\d+(\.\d+)?)/);
-        const delivery = match ? parseFloat(match[1]) : 0;
-        const total = subtotal + delivery;
-        totalElement.innerHTML = `S/ ${total.toFixed(2)}`;
+    if (subtotalElement && totalElement && costoDeliveryElement) {
+        const subtotalText = subtotalElement.textContent.replace('S/ ', '');
+        const subtotal = parseFloat(subtotalText) || 0;
+        
+        const deliveryText = costoDeliveryElement.textContent || costoDeliveryElement.innerText;
+        
+        if (deliveryText.toUpperCase().includes('CONSULTAR')) {
+            totalElement.innerHTML = `S/ ${subtotal.toFixed(2)} <span style="color: #d32f2f; font-size: 0.9em; font-weight: bold;">+ delivery a consultar</span>`;
+        } else {
+            const match = deliveryText.match(/(\d+(\.\d+)?)/);
+            const delivery = match ? parseFloat(match[1]) : 0;
+            const total = subtotal + delivery;
+            totalElement.innerHTML = `S/ ${total.toFixed(2)}`;
+        }
     }
 }
 
@@ -3993,29 +4002,37 @@ function actualizarCostoDelivery() {
     const distritoSelect = document.getElementById('cliente-distrito');
     const costoElement = document.getElementById('costo-delivery');
     
-    const valorSeleccionado = distritoSelect.value;
-    
-    if (valorSeleccionado === 'interdistrital-consultar' || valorSeleccionado === 'otro') {
-        costoElement.innerHTML = '<span style="color: #d32f2f; font-weight: bold; background: #ffebee; padding: 2px 8px; border-radius: 4px;">CONSULTAR</span>';
-    } else if (valorSeleccionado && valorSeleccionado.includes('S/')) {
-        const precioMatch = valorSeleccionado.match(/S\/\s*(\d+)/);
-        if (precioMatch) {
-            const precio = precioMatch[1];
-            costoElement.innerHTML = `S/ ${precio}`;
+    if (distritoSelect && costoElement) {
+        const valorSeleccionado = distritoSelect.value;
+        
+        if (valorSeleccionado === 'interdistrital-consultar' || valorSeleccionado === 'otro') {
+            costoElement.innerHTML = '<span style="color: #d32f2f; font-weight: bold; background: #ffebee; padding: 2px 8px; border-radius: 4px;">CONSULTAR</span>';
+        } else if (valorSeleccionado && valorSeleccionado.includes('S/')) {
+            const precioMatch = valorSeleccionado.match(/S\/\s*(\d+)/);
+            if (precioMatch) {
+                const precio = precioMatch[1];
+                costoElement.innerHTML = `S/ ${precio}`;
+            }
+        } else {
+            costoElement.innerHTML = 'S/ 0.00';
         }
-    } else {
-        costoElement.innerHTML = 'S/ 0.00';
+        
+        setTimeout(actualizarTotalPedido, 10);
     }
-    
-    setTimeout(actualizarTotalPedido, 10);
 }
 
 function resetearFormularioPedido() {
-    document.getElementById('cliente-nombre').value = '';
-    document.getElementById('cliente-telefono').value = '';
-    document.getElementById('cliente-distrito').value = '';
-    document.getElementById('instrucciones').value = '';
-    document.getElementById('monto-efectivo').value = '';
+    const nombreInput = document.getElementById('cliente-nombre');
+    const telefonoInput = document.getElementById('cliente-telefono');
+    const distritoSelect = document.getElementById('cliente-distrito');
+    const instruccionesInput = document.getElementById('instrucciones');
+    const montoEfectivoInput = document.getElementById('monto-efectivo');
+    
+    if (nombreInput) nombreInput.value = '';
+    if (telefonoInput) telefonoInput.value = '';
+    if (distritoSelect) distritoSelect.value = '';
+    if (instruccionesInput) instruccionesInput.value = '';
+    if (montoEfectivoInput) montoEfectivoInput.value = '';
     
     seleccionarTipoPedido('recoger');
     seleccionarMetodoPago('efectivo');
@@ -4026,22 +4043,27 @@ function seleccionarTipoPedido(tipo) {
     const btnDelivery = document.getElementById('btn-delivery');
     const btnRecoger = document.getElementById('btn-recoger');
     
-    if (tipo === 'delivery') {
-        btnDelivery.style.background = 'var(--VERDE)';
-        btnDelivery.style.color = 'white';
-        btnRecoger.style.background = 'var(--gris-claro)';
-        btnRecoger.style.color = '#333';
-        document.getElementById('seccion-delivery').style.display = 'block';
-    } else {
-        btnRecoger.style.background = 'var(--VERDE)';
-        btnRecoger.style.color = 'white';
-        btnDelivery.style.background = 'var(--gris-claro)';
-        btnDelivery.style.color = '#333';
-        document.getElementById('seccion-delivery').style.display = 'none';
-        document.getElementById('costo-delivery').textContent = 'S/ 0.00';
+    if (btnDelivery && btnRecoger) {
+        if (tipo === 'delivery') {
+            btnDelivery.style.background = 'var(--VERDE)';
+            btnDelivery.style.color = 'white';
+            btnRecoger.style.background = 'var(--gris-claro)';
+            btnRecoger.style.color = '#333';
+            const seccionDelivery = document.getElementById('seccion-delivery');
+            if (seccionDelivery) seccionDelivery.style.display = 'block';
+        } else {
+            btnRecoger.style.background = 'var(--VERDE)';
+            btnRecoger.style.color = 'white';
+            btnDelivery.style.background = 'var(--gris-claro)';
+            btnDelivery.style.color = '#333';
+            const seccionDelivery = document.getElementById('seccion-delivery');
+            if (seccionDelivery) seccionDelivery.style.display = 'none';
+            const costoElement = document.getElementById('costo-delivery');
+            if (costoElement) costoElement.textContent = 'S/ 0.00';
+        }
+        
+        actualizarTotalPedido();
     }
-    
-    actualizarTotalPedido();
 }
 
 function seleccionarMetodoPago(metodo) {
@@ -4052,58 +4074,71 @@ function seleccionarMetodoPago(metodo) {
     });
     
     const opciones = document.querySelectorAll('.metodo-pago-opcion');
-    if (metodo === 'efectivo') opciones[0].classList.add('seleccionado');
-    if (metodo === 'yape') opciones[1].classList.add('seleccionado');
-    if (metodo === 'plin') opciones[2].classList.add('seleccionado');
-    if (metodo === 'tarjeta') opciones[3].classList.add('seleccionado');
+    if (opciones.length >= 4) {
+        if (metodo === 'efectivo') opciones[0].classList.add('seleccionado');
+        if (metodo === 'yape') opciones[1].classList.add('seleccionado');
+        if (metodo === 'plin') opciones[2].classList.add('seleccionado');
+        if (metodo === 'tarjeta') opciones[3].classList.add('seleccionado');
+    }
     
-    document.getElementById('campo-efectivo').style.display = 'none';
-    document.getElementById('campo-yape').style.display = 'none';
-    document.getElementById('campo-plin').style.display = 'none';
-    document.getElementById('campo-tarjeta').style.display = 'none';
+    const campoEfectivo = document.getElementById('campo-efectivo');
+    const campoYape = document.getElementById('campo-yape');
+    const campoPlin = document.getElementById('campo-plin');
+    const campoTarjeta = document.getElementById('campo-tarjeta');
     
-    if (metodo === 'efectivo') {
-        document.getElementById('campo-efectivo').style.display = 'block';
-    } else if (metodo === 'yape') {
-        document.getElementById('campo-yape').style.display = 'block';
-    } else if (metodo === 'plin') {
-        document.getElementById('campo-plin').style.display = 'block';
-    } else if (metodo === 'tarjeta') {
-        document.getElementById('campo-tarjeta').style.display = 'block';
+    if (campoEfectivo) campoEfectivo.style.display = 'none';
+    if (campoYape) campoYape.style.display = 'none';
+    if (campoPlin) campoPlin.style.display = 'none';
+    if (campoTarjeta) campoTarjeta.style.display = 'none';
+    
+    if (metodo === 'efectivo' && campoEfectivo) {
+        campoEfectivo.style.display = 'block';
+    } else if (metodo === 'yape' && campoYape) {
+        campoYape.style.display = 'block';
+    } else if (metodo === 'plin' && campoPlin) {
+        campoPlin.style.display = 'block';
+    } else if (metodo === 'tarjeta' && campoTarjeta) {
+        campoTarjeta.style.display = 'block';
     }
 }
 
 function calcularVuelto() {
-    const montoEfectivo = parseFloat(document.getElementById('monto-efectivo').value) || 0;
-    const totalPedido = parseFloat(document.getElementById('total-pedido').textContent.replace('S/ ', '')) || 0;
+    const montoEfectivoInput = document.getElementById('monto-efectivo');
+    const totalElement = document.getElementById('total-pedido');
     const vueltoInfo = document.getElementById('vuelto-info');
     const montoVuelto = document.getElementById('monto-vuelto');
     const vueltoTexto = document.getElementById('vuelto-texto');
     const advertenciaFalta = document.getElementById('advertencia-falta');
     
-    if (montoEfectivo > 0) {
-        const vuelto = montoEfectivo - totalPedido;
+    if (montoEfectivoInput && totalElement && vueltoInfo && montoVuelto && vueltoTexto && advertenciaFalta) {
+        const montoEfectivo = parseFloat(montoEfectivoInput.value) || 0;
+        const totalText = totalElement.textContent.replace('S/ ', '');
+        const totalPedido = parseFloat(totalText) || 0;
         
-        if (vuelto >= 0) {
-            vueltoTexto.textContent = 'Vuelto:';
-            montoVuelto.textContent = `S/ ${vuelto.toFixed(2)}`;
-            vueltoInfo.style.display = 'block';
-            vueltoInfo.style.background = 'var(--verde-claro)';
-            vueltoInfo.style.borderColor = 'var(--VERDE)';
-            montoVuelto.style.color = 'var(--VERDE)';
-            advertenciaFalta.style.display = 'none';
+        if (montoEfectivo > 0) {
+            const vuelto = montoEfectivo - totalPedido;
+            
+            if (vuelto >= 0) {
+                vueltoTexto.textContent = 'Vuelto:';
+                montoVuelto.textContent = `S/ ${vuelto.toFixed(2)}`;
+                vueltoInfo.style.display = 'block';
+                vueltoInfo.style.background = 'var(--verde-claro)';
+                vueltoInfo.style.borderColor = 'var(--VERDE)';
+                montoVuelto.style.color = 'var(--VERDE)';
+                advertenciaFalta.style.display = 'none';
+            } else {
+                const falta = Math.abs(vuelto);
+                vueltoTexto.textContent = 'Falta:';
+                montoVuelto.textContent = `S/ ${falta.toFixed(2)}`;
+                vueltoInfo.style.display = 'block';
+                vueltoInfo.style.background = '#ffe6e6';
+                vueltoInfo.style.borderColor = 'var(--ROJO)';
+                montoVuelto.style.color = 'var(--ROJO)';
+                advertenciaFalta.style.display = 'block';
+            }
         } else {
-            const falta = Math.abs(vuelto);
-            vueltoTexto.textContent = 'Falta:';
-            montoVuelto.textContent = `S/ ${falta.toFixed(2)}`;
-            vueltoInfo.style.display = 'block';
-            vueltoInfo.style.background = '#ffe6e6';
-            vueltoInfo.style.borderColor = 'var(--ROJO)';
-            montoVuelto.style.color = 'var(--ROJO)';
-            advertenciaFalta.style.display = 'block';
+            vueltoInfo.style.display = 'none';
         }
-    } else {
-        vueltoInfo.style.display = 'none';
     }
 }
 
@@ -4115,41 +4150,48 @@ function limpiarErrores() {
 
 function mostrarError(id, mensaje) {
     const errorElement = document.getElementById(id);
-    errorElement.textContent = mensaje;
-    errorElement.style.display = 'block';
+    if (errorElement) {
+        errorElement.textContent = mensaje;
+        errorElement.style.display = 'block';
+    }
 }
 
 function validarFormulario() {
     let valido = true;
     limpiarErrores();
     
-    const nombre = document.getElementById('cliente-nombre').value.trim();
-    const telefono = document.getElementById('cliente-telefono').value.trim();
-    const tipoPedido = document.getElementById('seccion-delivery').style.display === 'block' ? 'delivery' : 'recoger';
+    const nombreInput = document.getElementById('cliente-nombre');
+    const telefonoInput = document.getElementById('cliente-telefono');
     
-    if (!nombre) {
+    if (!nombreInput || !nombreInput.value.trim()) {
         mostrarError('error-nombre', 'Por favor ingresa tu nombre');
         valido = false;
     }
     
-    if (!telefono) {
+    if (!telefonoInput || !telefonoInput.value.trim()) {
         mostrarError('error-telefono', 'Por favor ingresa tu WhatsApp');
         valido = false;
-    } else if (!/^\d{9}$/.test(telefono.replace(/\D/g, ''))) {
+    } else if (!/^\d{9}$/.test(telefonoInput.value.trim().replace(/\D/g, ''))) {
         mostrarError('error-telefono', 'Por favor ingresa un WhatsApp válido (9 dígitos)');
         valido = false;
     }
     
     if (metodoPagoSeleccionado === 'efectivo') {
-        const montoEfectivo = parseFloat(document.getElementById('monto-efectivo').value) || 0;
-        const totalPedido = parseFloat(document.getElementById('total-pedido').textContent.replace('S/ ', '')) || 0;
+        const montoEfectivoInput = document.getElementById('monto-efectivo');
+        const totalElement = document.getElementById('total-pedido');
         
-        if (montoEfectivo <= 0) {
-            mostrarError('error-efectivo', 'Por favor ingresa el monto con el que pagarás');
-            valido = false;
-        } else if (montoEfectivo < totalPedido) {
-            mostrarError('error-efectivo', `El monto debe ser mayor o igual al total (S/ ${totalPedido.toFixed(2)})`);
-            valido = false;
+        if (montoEfectivoInput && totalElement) {
+            const montoEfectivo = parseFloat(montoEfectivoInput.value) || 0;
+            const totalText = totalElement.textContent.replace('S/ ', '');
+            const totalPedido = parseFloat(totalText) || 0;
+            
+            if (montoEfectivo <= 0) {
+                mostrarError('error-efectivo', 'Por favor ingresa el monto con el que pagarás');
+                valido = false;
+            } else if (montoEfectivo < totalPedido) {
+                mostrarError('error-efectivo', `El monto debe ser mayor o igual al total (S/ ${totalPedido.toFixed(2)})`);
+                valido = false;
+            }
         }
     }
     
@@ -4191,22 +4233,37 @@ function validarYEnviarPedido() {
 }
 
 function enviarPedidoWhatsApp() {
-    const nombre = document.getElementById('cliente-nombre').value.trim();
-    const telefono = document.getElementById('cliente-telefono').value.trim();
-    const tipoPedido = document.getElementById('seccion-delivery').style.display === 'block' ? 'delivery' : 'recoger';
-    const distrito = document.getElementById('cliente-distrito').value;
-    const instrucciones = document.getElementById('instrucciones').value.trim();
+    const nombreInput = document.getElementById('cliente-nombre');
+    const telefonoInput = document.getElementById('cliente-telefono');
+    const distritoSelect = document.getElementById('cliente-distrito');
+    const instruccionesInput = document.getElementById('instrucciones');
+    const subtotalElement = document.getElementById('subtotal-pedido');
+    const costoDeliveryElement = document.getElementById('costo-delivery');
+    const totalElement = document.getElementById('total-pedido');
     
-    const subtotal = parseFloat(document.getElementById('subtotal-pedido').textContent.replace('S/ ', '')) || 0;
-    const delivery = parseFloat(document.getElementById('costo-delivery').textContent.replace('S/ ', '')) || 0;
-    const total = parseFloat(document.getElementById('total-pedido').textContent.replace('S/ ', '')) || 0;
+    if (!nombreInput || !telefonoInput || !subtotalElement || !totalElement) {
+        alert('Error al obtener datos del formulario');
+        return;
+    }
+    
+    const nombre = nombreInput.value.trim();
+    const telefono = telefonoInput.value.trim();
+    const instrucciones = instruccionesInput ? instruccionesInput.value.trim() : '';
+    
+    const tipoPedido = document.getElementById('seccion-delivery') && 
+                       document.getElementById('seccion-delivery').style.display === 'block' ? 
+                       'delivery' : 'recoger';
+    
+    const subtotal = parseFloat(subtotalElement.textContent.replace('S/ ', '')) || 0;
+    const delivery = parseFloat(costoDeliveryElement.textContent.replace('S/ ', '')) || 0;
+    const total = parseFloat(totalElement.textContent.replace('S/ ', '')) || 0;
     
     let mensaje = `🍽 *NUEVO PEDIDO - CEVICHERÍA TIPOS* 🦐\n\n`;
     mensaje += `*CLIENTE:*\nNombre: ${nombre}\nWhatsApp: ${telefono}\n\n`;
     mensaje += `*MODALIDAD:* ${tipoPedido === 'delivery' ? 'Delivery 🚚' : 'Recoger en tienda 🏃'}\n`;
     
-    if (tipoPedido === 'delivery') {
-        mensaje += `Distrito: ${distrito.split(' - ')[0]}\n`;
+    if (tipoPedido === 'delivery' && distritoSelect && distritoSelect.value) {
+        mensaje += `Distrito: ${distritoSelect.value.split(' - ')[0]}\n`;
     }
     
     mensaje += `\n*PEDIDO:*\n────────\n`;
@@ -4230,13 +4287,16 @@ function enviarPedidoWhatsApp() {
     mensaje += `*MÉTODO DE PAGO: ${metodoPagoSeleccionado.toUpperCase()}*\n`;
     
     if (metodoPagoSeleccionado === 'efectivo') {
-        const montoEfectivo = parseFloat(document.getElementById('monto-efectivo').value) || 0;
-        const vuelto = montoEfectivo - total;
-        mensaje += `Paga con: S/ ${montoEfectivo.toFixed(2)}\n`;
-        if (vuelto >= 0) {
-            mensaje += `Vuelto: S/ ${vuelto.toFixed(2)}\n`;
-        } else {
-            mensaje += `⚠ Faltan: S/ ${Math.abs(vuelto).toFixed(2)}\n`;
+        const montoEfectivoInput = document.getElementById('monto-efectivo');
+        if (montoEfectivoInput) {
+            const montoEfectivo = parseFloat(montoEfectivoInput.value) || 0;
+            const vuelto = montoEfectivo - total;
+            mensaje += `Paga con: S/ ${montoEfectivo.toFixed(2)}\n`;
+            if (vuelto >= 0) {
+                mensaje += `Vuelto: S/ ${vuelto.toFixed(2)}\n`;
+            } else {
+                mensaje += `⚠ Faltan: S/ ${Math.abs(vuelto).toFixed(2)}\n`;
+            }
         }
     } else if (metodoPagoSeleccionado === 'yape') {
         mensaje += `\n📱 *PAGO CON YAPE:*\nEl repartidor compartirá el número de Yape por WhatsApp.\n`;
@@ -4268,11 +4328,22 @@ function enviarPedidoWhatsApp() {
 // FUNCIÓN PARA RESERVAS
 // ================================================
 function enviarReservaWhatsApp() {
-    const nombre = document.getElementById('reserva-nombre').value;
-    const telefono = document.getElementById('reserva-telefono').value;
-    const personas = document.getElementById('reserva-personas').value;
-    const fecha = document.getElementById('reserva-fecha').value;
-    const hora = document.getElementById('reserva-hora').value;
+    const nombreInput = document.getElementById('reserva-nombre');
+    const telefonoInput = document.getElementById('reserva-telefono');
+    const personasInput = document.getElementById('reserva-personas');
+    const fechaInput = document.getElementById('reserva-fecha');
+    const horaInput = document.getElementById('reserva-hora');
+
+    if (!nombreInput || !telefonoInput || !personasInput || !fechaInput || !horaInput) {
+        alert('✗ Por favor, completa todos los campos');
+        return;
+    }
+
+    const nombre = nombreInput.value;
+    const telefono = telefonoInput.value;
+    const personas = personasInput.value;
+    const fecha = fechaInput.value;
+    const hora = horaInput.value;
 
     if (!nombre || !telefono || !personas || !fecha || !hora) {
         alert('✗ Por favor, completa todos los campos');
@@ -4303,18 +4374,18 @@ function enviarReservaWhatsApp() {
     window.open(`https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`, '_blank');
     
     setTimeout(() => {
-        document.getElementById('reserva-nombre').value = '';
-        document.getElementById('reserva-telefono').value = '';
-        document.getElementById('reserva-personas').value = '2';
-        document.getElementById('reserva-fecha').value = '';
-        document.getElementById('reserva-hora').value = '';
+        if (nombreInput) nombreInput.value = '';
+        if (telefonoInput) telefonoInput.value = '';
+        if (personasInput) personasInput.value = '2';
+        if (fechaInput) fechaInput.value = '';
+        if (horaInput) horaInput.value = '';
         mostrarPantalla('bienvenida');
         alert('✅ Solicitud de reserva enviada. Revisa WhatsApp para confirmar.');
     }, 1000);
 }
 
 // ================================================
-// EVENT LISTENERS Y INICIALIZACIÓN
+// INICIALIZACIÓN
 // ================================================
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar carrito
@@ -4364,19 +4435,6 @@ document.addEventListener('DOMContentLoaded', function() {
             cerrarCarrito();
             cerrarModalPersonalizacion();
             cerrarFormularioPedido();
-        }
-    });
-    
-    // Event listener para cerrar modales al hacer clic fuera
-    document.addEventListener('click', function(event) {
-        const carritoModal = document.getElementById('carrito-modal');
-        const carritoContenido = document.querySelector('.carrito-contenido');
-        const carritoBtn = document.querySelector('.carrito-btn');
-        
-        if (carritoModal.style.display === 'block' && 
-            !carritoContenido.contains(event.target) && 
-            !carritoBtn.contains(event.target)) {
-            cerrarCarrito();
         }
     });
 });
