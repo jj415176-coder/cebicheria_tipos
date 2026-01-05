@@ -3645,64 +3645,6 @@ function abrirModalPersonalizacion(nombre, precio, opciones) {
                 }
             });
         }
-        
-        const seccionBasica = document.createElement('div');
-        seccionBasica.style.marginBottom = '20px';
-        
-        const tituloBasica = document.createElement('div');
-        tituloBasica.style.fontSize = '0.95rem';
-        tituloBasica.style.fontWeight = '700';
-        tituloBasica.style.color = 'var(--VERDE)';
-        tituloBasica.style.marginBottom = '8px';
-        tituloBasica.textContent = 'Otras preferencias:';
-        
-        const opcionesBasicasContainer = document.createElement('div');
-        opcionesBasicasContainer.style.display = 'flex';
-        opcionesBasicasContainer.style.gap = '10px';
-        opcionesBasicasContainer.style.flexWrap = 'wrap';
-        
-        const opcionesBasicas = [
-            {texto: 'Sin cebolla', emoji: '🚫'},
-            {texto: 'Sin choclo', emoji: '🌽'},
-            {texto: 'Extra picante', emoji: '🌶️🌶️'}
-        ];
-        
-        opcionesBasicas.forEach((opcion) => {
-            const opcionElement = document.createElement('div');
-            opcionElement.className = 'opcion-personalizacion';
-            opcionElement.dataset.categoria = 'Basicas';
-            opcionElement.style.flex = '1';
-            opcionElement.style.minWidth = '100px';
-            opcionElement.style.padding = '10px 5px';
-            opcionElement.style.textAlign = 'center';
-            
-            opcionElement.innerHTML = `
-                <div style="font-size: 1.2rem; margin-bottom: 3px;">${opcion.emoji}</div>
-                <div style="font-weight: 600; font-size: 0.85rem;">${opcion.texto}</div>
-            `;
-            
-            opcionElement.onclick = () => {
-                opcionElement.classList.toggle('seleccionado');
-                
-                if (!opcionesSeleccionadas['Basicas']) {
-                    opcionesSeleccionadas['Basicas'] = [];
-                }
-                
-                if (opcionElement.classList.contains('seleccionado')) {
-                    if (!opcionesSeleccionadas['Basicas'].includes(opcion.texto)) {
-                        opcionesSeleccionadas['Basicas'].push(opcion.texto);
-                    }
-                } else {
-                    opcionesSeleccionadas['Basicas'] = opcionesSeleccionadas['Basicas'].filter(item => item !== opcion.texto);
-                }
-            };
-            
-            opcionesBasicasContainer.appendChild(opcionElement);
-        });
-        
-        seccionBasica.appendChild(tituloBasica);
-        seccionBasica.appendChild(opcionesBasicasContainer);
-        opcionesContainer.appendChild(seccionBasica);
     }
     
     document.getElementById('modal-personalizacion').style.display = 'flex';
@@ -3731,7 +3673,7 @@ function confirmarPersonalizacion() {
     const especificacionesInput = document.getElementById('especificaciones-personalizacion').value;
     let opcionesTexto = [];
     
-    Object.keys(opcionesSeleccionadas).forEach(categoria => {
+      Object.keys(opcionesSeleccionadas).forEach(categoria => {
         if (Array.isArray(opcionesSeleccionadas[categoria])) {
             opcionesTexto = opcionesTexto.concat(opcionesSeleccionadas[categoria]);
         } else {
