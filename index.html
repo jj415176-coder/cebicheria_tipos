@@ -3233,7 +3233,7 @@
 
     <!-- JavaScript -->
     <script>
-    // ================================================
+   // ================================================
 // VARIABLES GLOBALES
 // ================================================
 let carrito = JSON.parse(localStorage.getItem('carritoTipos')) || [];
@@ -3561,7 +3561,7 @@ function agregarSugerencia(nombre, precio) {
 }
 
 // ================================================
-// FUNCIONES DE PERSONALIZACIÓN
+// FUNCIONES DE PERSONALIZACIÓN (SIN OTRAS PREFERENCIAS)
 // ================================================
 function abrirModalPersonalizacion(nombre, precio, opciones) {
     platoActual = nombre;
@@ -3671,19 +3671,19 @@ function confirmarPersonalizacion() {
     }
     
     const especificacionesInput = document.getElementById('especificaciones-personalizacion').value;
-    let opcionesTexto = [];
-    
-      Object.keys(opcionesSeleccionadas).forEach(categoria => {
-        if (Array.isArray(opcionesSeleccionadas[categoria])) {
-            opcionesTexto = opcionesTexto.concat(opcionesSeleccionadas[categoria]);
-        } else {
-            opcionesTexto.push(opcionesSeleccionadas[categoria]);
-        }
-    });
-    
     let personalizacionTexto = '';
-    if (opcionesTexto.length > 0) {
-        personalizacionTexto = opcionesTexto.join(', ');
+    
+    // Solo agregar las opciones principales
+    if (opcionesSeleccionadas['Picante']) {
+        personalizacionTexto = opcionesSeleccionadas['Picante'];
+    }
+    if (opcionesSeleccionadas['Cocción']) {
+        if (personalizacionTexto) personalizacionTexto += ', ';
+        personalizacionTexto += opcionesSeleccionadas['Cocción'];
+    }
+    if (opcionesSeleccionadas['Tipo']) {
+        if (personalizacionTexto) personalizacionTexto += ', ';
+        personalizacionTexto += opcionesSeleccionadas['Tipo'];
     }
     
     if (especificacionesInput) {
