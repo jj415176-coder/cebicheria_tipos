@@ -3327,11 +3327,8 @@ function modificarCantidad(index, cambio) {
         const nuevaCantidad = carrito[index].cantidad + cambio;
         
         if (nuevaCantidad <= 0) {
-            if (confirm(`¿Eliminar "${carrito[index].nombre}" del carrito?`)) {
-                carrito.splice(index, 1);
-            } else {
-                carrito[index].cantidad = 1;
-            }
+            // Eliminar inmediatamente sin confirmar
+            carrito.splice(index, 1);
         } else {
             carrito[index].cantidad = nuevaCantidad;
         }
@@ -3348,26 +3345,8 @@ function eliminarDelCarrito(index) {
 function vaciarCarrito() {
     if (carrito.length === 0) return;
     
-    const boton = event.target;
-    const textoOriginal = boton.textContent;
-    
-    if (boton.dataset.confirmando) {
-        carrito = [];
-        actualizarCarrito();
-        boton.textContent = textoOriginal;
-        boton.style.background = '';
-        boton.dataset.confirmando = false;
-    } else {
-        boton.textContent = '¿Seguro?';
-        boton.style.background = 'var(--ROJO)';
-        boton.dataset.confirmando = true;
-        
-        setTimeout(() => {
-            boton.textContent = textoOriginal;
-            boton.style.background = '';
-            boton.dataset.confirmando = false;
-        }, 3000);
-    }
+    carrito = [];
+    actualizarCarrito();
 }
 
 function obtenerImagenPlato(nombre) {
