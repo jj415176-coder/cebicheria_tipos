@@ -3341,10 +3341,8 @@ function modificarCantidad(index, cambio) {
 }
 
 function eliminarDelCarrito(index) {
-    if (confirm(`¿Eliminar "${carrito[index].nombre}" del carrito?`)) {
-        carrito.splice(index, 1);
-        actualizarCarrito();
-    }
+    carrito.splice(index, 1);
+    actualizarCarrito();
 }
 
 function vaciarCarrito() {
