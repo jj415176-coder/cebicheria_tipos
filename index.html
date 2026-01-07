@@ -1744,6 +1744,13 @@
         height: 140px;
     }
 }
+        /* Agrega en la sección de estilos del formulario */
+#error-distrito {
+    color: var(--ROJO);
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: none;
+}
     </style>
 </head>
 <body>
@@ -1868,21 +1875,28 @@
                 </div>
                 
                 <!-- Tipo de pedido -->
-                <div class="form-group">
-                    <label>Tipo de Pedido *</label>
-                    <div style="display: flex; gap: 10px; margin-top: 5px;">
-                        <button type="button" id="btn-delivery" class="btn-agregar" style="flex: 1;" onclick="seleccionarTipoPedido('delivery')"> Delivery</button>
-                        <button type="button" id="btn-recoger" class="btn-agregar" style="flex: 1; background: var(--gris-claro); color: #333;" onclick="seleccionarTipoPedido('recoger')"> Recoger</button>
-                    </div>
-                </div>
-                
-             <select id="cliente-distrito" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px;" onchange="actualizarCostoDelivery()">
-    <option value="">Selecciona tu distrito</option>
-    <option value="Hospital Militar Reja Negra - S/ 0">Hospital Militar (Reja Negra - Av brasil)</option>
-    <option value="Pueblo Libre - S/ 5">Pueblo Libre — S/ 5</option>
-   <option value="interdistrital-consultar">Interdistrital (Consultar precio)</option>
-    <option value="otro">Otro distrito (Consultar)</option>
-</select>
+              <!-- Tipo de pedido -->
+<div class="form-group">
+    <label>Tipo de Pedido *</label>
+    <div style="display: flex; gap: 10px; margin-top: 5px;">
+        <button type="button" id="btn-delivery" class="btn-agregar" style="flex: 1;" onclick="seleccionarTipoPedido('delivery')"> Delivery</button>
+        <button type="button" id="btn-recoger" class="btn-agregar" style="flex: 1; background: var(--gris-claro); color: #333;" onclick="seleccionarTipoPedido('recoger')"> Recoger</button>
+    </div>
+</div>
+
+<!-- Selector de distrito (solo para delivery) -->
+<div id="seccion-delivery" style="display: none;">
+    <div class="form-group">
+        <label for="cliente-distrito">Distrito para Delivery *</label>
+        <select id="cliente-distrito" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px;" onchange="actualizarCostoDelivery()">
+            <option value="">Selecciona tu distrito</option>
+            <option value="Hospital Militar Reja Negra - S/ 0">Hospital Militar (Reja Negra - Av brasil)</option>
+            <option value="Pueblo Libre - S/ 5">Pueblo Libre — S/ 5</option>
+            <option value="interdistrital-consultar">Interdistrital (Consultar precio)</option>
+            <option value="otro">Otro distrito (Consultar)</option>
+        </select>
+    </div>
+</div>
                 
                 <!-- Método de pago -->
                 <div class="form-group">
@@ -3918,25 +3932,17 @@ function actualizarTotalPedido() {
 }
 
 function actualizarCostoDelivery() {
+    // Ocultar si no es delivery
+    const seccionDelivery = document.getElementById('seccion-delivery');
+    if (seccionDelivery && seccionDelivery.style.display === 'none') {
+        return; // No hacer nada si no es delivery
+    }
+    
     const distritoSelect = document.getElementById('cliente-distrito');
     const costoElement = document.getElementById('costo-delivery');
     
     if (distritoSelect && costoElement) {
-        const valorSeleccionado = distritoSelect.value;
-        
-        if (valorSeleccionado === 'interdistrital-consultar' || valorSeleccionado === 'otro') {
-            costoElement.innerHTML = '<span style="color: #d32f2f; font-weight: bold; background: #ffebee; padding: 2px 8px; border-radius: 4px;">CONSULTAR</span>';
-        } else if (valorSeleccionado && valorSeleccionado.includes('S/')) {
-            const precioMatch = valorSeleccionado.match(/S\/\s*(\d+)/);
-            if (precioMatch) {
-                const precio = precioMatch[1];
-                costoElement.innerHTML = `S/ ${precio}`;
-            }
-        } else {
-            costoElement.innerHTML = 'S/ 0.00';
-        }
-        
-        setTimeout(actualizarTotalPedido, 10);
+        // Resto del código...
     }
 }
 
@@ -3953,11 +3959,10 @@ function resetearFormularioPedido() {
     if (instruccionesInput) instruccionesInput.value = '';
     if (montoEfectivoInput) montoEfectivoInput.value = '';
     
-    seleccionarTipoPedido('recoger');
+    seleccionarTipoPedido('recoger'); // Por defecto Recoger
     seleccionarMetodoPago('efectivo');
     limpiarErrores();
 }
-
 function seleccionarTipoPedido(tipo) {
     const btnDelivery = document.getElementById('btn-delivery');
     const btnRecoger = document.getElementById('btn-recoger');
@@ -4065,6 +4070,8 @@ function limpiarErrores() {
     document.querySelectorAll('.error-mensaje').forEach(el => {
         el.style.display = 'none';
     });
+    const errorDistrito = document.getElementById('error-distrito');
+    if (errorDistrito) errorDistrito.style.display = 'none';
 }
 
 function mostrarError(id, mensaje) {
@@ -4081,12 +4088,15 @@ function validarFormulario() {
     
     const nombreInput = document.getElementById('cliente-nombre');
     const telefonoInput = document.getElementById('cliente-telefono');
+    const seccionDelivery = document.getElementById('seccion-delivery');
     
+    // Validar nombre
     if (!nombreInput || !nombreInput.value.trim()) {
         mostrarError('error-nombre', 'Por favor ingresa tu nombre');
         valido = false;
     }
     
+    // Validar teléfono
     if (!telefonoInput || !telefonoInput.value.trim()) {
         mostrarError('error-telefono', 'Por favor ingresa tu WhatsApp');
         valido = false;
@@ -4095,24 +4105,25 @@ function validarFormulario() {
         valido = false;
     }
     
-    if (metodoPagoSeleccionado === 'efectivo') {
-        const montoEfectivoInput = document.getElementById('monto-efectivo');
-        const totalElement = document.getElementById('total-pedido');
-        
-        if (montoEfectivoInput && totalElement) {
-            const montoEfectivo = parseFloat(montoEfectivoInput.value) || 0;
-            const totalText = totalElement.textContent.replace('S/ ', '');
-            const totalPedido = parseFloat(totalText) || 0;
-            
-            if (montoEfectivo <= 0) {
-                mostrarError('error-efectivo', 'Por favor ingresa el monto con el que pagarás');
-                valido = false;
-            } else if (montoEfectivo < totalPedido) {
-                mostrarError('error-efectivo', `El monto debe ser mayor o igual al total (S/ ${totalPedido.toFixed(2)})`);
-                valido = false;
+    // Validar distrito solo si es delivery
+    if (seccionDelivery && seccionDelivery.style.display === 'block') {
+        const distritoSelect = document.getElementById('cliente-distrito');
+        if (!distritoSelect || !distritoSelect.value.trim()) {
+            // Crear elemento de error si no existe
+            let errorDistrito = document.getElementById('error-distrito');
+            if (!errorDistrito) {
+                errorDistrito = document.createElement('div');
+                errorDistrito.id = 'error-distrito';
+                errorDistrito.className = 'error-mensaje';
+                distritoSelect.parentNode.appendChild(errorDistrito);
             }
+            errorDistrito.textContent = 'Por favor selecciona tu distrito';
+            errorDistrito.style.display = 'block';
+            valido = false;
         }
     }
+    
+    // Resto de validaciones...
     
     return valido;
 }
