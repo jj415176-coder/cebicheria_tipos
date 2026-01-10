@@ -3734,10 +3734,16 @@ function abrirModalCombinadoMarino(nombre, precio) {
     if (opcionesContainer) {
         opcionesContainer.innerHTML = '';
 
-        if (nombre.includes('chaufa') || nombre.includes('Chaufa') || 
-            nombre === 'Doble Marino 2' || nombre === 'Triple Marino 3' || 
-            nombre === 'Triple Marino 4' || nombre === 'Ronda Marina 3' || 
-            nombre === 'Ronda Marina 4') {
+        // VARIABLE PARA SABER SI SE DEBE SELECCIONAR "CHAUFA DE MARISCOS" POR DEFECTO
+        const seleccionarMariscosPorDefecto = nombre.includes('chaufa') || 
+                                             nombre.includes('Chaufa') || 
+                                             nombre === 'Doble Marino 2' || 
+                                             nombre === 'Triple Marino 3' || 
+                                             nombre === 'Triple Marino 4' || 
+                                             nombre === 'Ronda Marina 3' || 
+                                             nombre === 'Ronda Marina 4';
+        
+        if (seleccionarMariscosPorDefecto) {
             
             const seccionChaufa = document.createElement('div');
             seccionChaufa.style.marginBottom = '20px';
@@ -3772,6 +3778,12 @@ function abrirModalCombinadoMarino(nombre, precio) {
                     <div style="font-size: 1.2rem;">${opcion.emoji}</div>
                     <div style="font-weight: 600; font-size: 0.85rem;">${opcion.texto}</div>
                 `;
+                
+                // SELECCIONAR "CHAUFA DE MARISCOS" POR DEFECTO
+                if (opcion.texto === 'Chaufa de Mariscos') {
+                    opcionElement.classList.add('seleccionado');
+                    opcionesSeleccionadas['Chaufa'] = 'Chaufa de Mariscos';
+                }
                 
                 opcionElement.onclick = () => {
                     document.querySelectorAll('.opcion-personalizacion[data-categoria="Chaufa"]').forEach(el => {
@@ -3835,6 +3847,7 @@ function abrirModalCombinadoMarino(nombre, precio) {
             
             opcionesAjiContainer.appendChild(opcionElement);
             
+            // SELECCIONAR "Poco ají" POR DEFECTO
             if (opcion.texto === 'Poco ají') {
                 setTimeout(() => {
                     opcionElement.classList.add('seleccionado');
