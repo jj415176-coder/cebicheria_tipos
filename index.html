@@ -543,7 +543,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.7);
-            z-index: 1000;
+            z-index: 20000 !important; 
             overflow-y: auto;
         }
 
@@ -971,7 +971,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.7);
-            z-index: 1000;
+            z-index: 20000 !important;
             align-items: center;
             justify-content: center;
         }
@@ -1448,7 +1448,7 @@
     text-align: center;
     font-size: 24px;
     box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-    z-index: 1000;
+    z-index: 9000 !important; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1475,7 +1475,7 @@
     border-radius: 50%;
     text-align: center;
     box-shadow: 0 4px 15px rgba(174, 32, 18, 0.4);
-    z-index: 1000;
+    z-index: 9000 !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -3686,7 +3686,6 @@ function confirmarPersonalizacion() {
     const especificacionesInput = document.getElementById('especificaciones-personalizacion').value;
     let personalizacionTexto = '';
     
-    // Solo agregar las opciones principales
     if (opcionesSeleccionadas['Picante']) {
         personalizacionTexto = opcionesSeleccionadas['Picante'];
     }
@@ -3697,6 +3696,11 @@ function confirmarPersonalizacion() {
     if (opcionesSeleccionadas['Tipo']) {
         if (personalizacionTexto) personalizacionTexto += ', ';
         personalizacionTexto += opcionesSeleccionadas['Tipo'];
+    }
+
+    if (opcionesSeleccionadas['Chaufa']) {
+        if (personalizacionTexto) personalizacionTexto += ', ';
+        personalizacionTexto += opcionesSeleccionadas['Chaufa'];
     }
     
     if (especificacionesInput) {
@@ -3944,17 +3948,43 @@ function actualizarTotalPedido() {
 }
 
 function actualizarCostoDelivery() {
-    // Ocultar si no es delivery
+    // 1. Verificamos si la sección de delivery está visible
     const seccionDelivery = document.getElementById('seccion-delivery');
     if (seccionDelivery && seccionDelivery.style.display === 'none') {
-        return; // No hacer nada si no es delivery
+        // Si el cliente eligió "Recoger", el costo es 0
+        const costoElement = document.getElementById('costo-delivery');
+        if (costoElement) costoElement.textContent = 'S/ 0.00';
+        actualizarTotalPedido();
+        return; 
     }
     
+    // 2. Obtenemos los elementos
     const distritoSelect = document.getElementById('cliente-distrito');
     const costoElement = document.getElementById('costo-delivery');
     
     if (distritoSelect && costoElement) {
-        // Resto del código...
+        const valorSeleccionado = distritoSelect.value;
+        let costo = 0;
+
+        // 3. Lógica para extraer el precio
+        // Si el valor dice "S/ 5", extraemos el 5.
+        if (valorSeleccionado.includes('S/')) {
+            const partes = valorSeleccionado.split('S/');
+            // partes[1] tendrá " 5", lo limpiamos y convertimos a número
+            costo = parseFloat(partes[1].trim());
+            costoElement.innerText = `S/ ${costo.toFixed(2)}`;
+        } 
+        // Si es interdistrital o no tiene precio fijo
+        else if (valorSeleccionado.includes('consultar')) {
+            costoElement.innerText = "A consultar";
+            // No sumamos nada al total numérico, pero mostramos el texto
+        } else {
+            // Si no ha seleccionado nada
+            costoElement.innerText = 'S/ 0.00';
+        }
+
+        // 4. IMPORTANTE: Recalcular el total final
+        actualizarTotalPedido(); 
     }
 }
 
