@@ -1826,6 +1826,12 @@
             <option value="interdistrital-consultar">Interdistrital (Consultar precio)</option>
         </select>
     </div>
+    
+    <div class="form-group" style="margin-top: 15px;">
+        <label for="cliente-direccion">Dirección Exacta y Referencia *</label>
+        <textarea id="cliente-direccion" rows="2" placeholder="Ej: Av. La Marina 500, frente al grifo Primax" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px; font-family: 'Poppins', sans-serif;"></textarea>
+        <div class="error-mensaje" id="error-direccion">Por favor ingresa tu dirección exacta</div>
+    </div>
 </div>
                 
                 <div class="form-group">
@@ -3891,16 +3897,18 @@ function resetearFormularioPedido() {
     const nombreInput = document.getElementById('cliente-nombre');
     const telefonoInput = document.getElementById('cliente-telefono');
     const distritoSelect = document.getElementById('cliente-distrito');
+    const direccionInput = document.getElementById('cliente-direccion'); // NUEVO
     const instruccionesInput = document.getElementById('instrucciones');
     const montoEfectivoInput = document.getElementById('monto-efectivo');
     
     if (nombreInput) nombreInput.value = '';
     if (telefonoInput) telefonoInput.value = '';
     if (distritoSelect) distritoSelect.value = '';
+    if (direccionInput) direccionInput.value = ''; // NUEVO
     if (instruccionesInput) instruccionesInput.value = '';
     if (montoEfectivoInput) montoEfectivoInput.value = '';
     
-    seleccionarTipoPedido('recoger'); // Por defecto Recoger
+    seleccionarTipoPedido('recoger'); 
     seleccionarMetodoPago('efectivo');
     limpiarErrores();
 }
@@ -4046,11 +4054,13 @@ function validarFormulario() {
         valido = false;
     }
     
-    // Validar distrito solo si es delivery
+    // Validaciones exclusivas de Delivery
     if (seccionDelivery && seccionDelivery.style.display === 'block') {
         const distritoSelect = document.getElementById('cliente-distrito');
+        const direccionInput = document.getElementById('cliente-direccion'); // NUEVO
+        
+        // Validar Distrito
         if (!distritoSelect || !distritoSelect.value.trim()) {
-            // Crear elemento de error si no existe
             let errorDistrito = document.getElementById('error-distrito');
             if (!errorDistrito) {
                 errorDistrito = document.createElement('div');
@@ -4062,13 +4072,16 @@ function validarFormulario() {
             errorDistrito.style.display = 'block';
             valido = false;
         }
+
+        // Validar Dirección Exacta (NUEVO)
+        if (!direccionInput || !direccionInput.value.trim()) {
+            mostrarError('error-direccion', 'Por favor ingresa tu dirección exacta');
+            valido = false;
+        }
     }
-    
-    // Resto de validaciones...
     
     return valido;
 }
-
 function validarYEnviarPedido() {
     if (!validarFormulario()) {
         return;
@@ -4107,6 +4120,7 @@ function enviarPedidoWhatsApp() {
     const nombreInput = document.getElementById('cliente-nombre');
     const telefonoInput = document.getElementById('cliente-telefono');
     const distritoSelect = document.getElementById('cliente-distrito');
+    const direccionInput = document.getElementById('cliente-direccion'); // NUEVO
     const instruccionesInput = document.getElementById('instrucciones');
     const subtotalElement = document.getElementById('subtotal-pedido');
     const costoDeliveryElement = document.getElementById('costo-delivery');
@@ -4133,8 +4147,14 @@ function enviarPedidoWhatsApp() {
     mensaje += `*CLIENTE:*\nNombre: ${nombre}\nWhatsApp: ${telefono}\n\n`;
     mensaje += `*MODALIDAD:* ${tipoPedido === 'delivery' ? 'Delivery 🚚' : 'Recoger en tienda 🏃'}\n`;
     
-    if (tipoPedido === 'delivery' && distritoSelect && distritoSelect.value) {
-        mensaje += `Distrito: ${distritoSelect.value.split(' - ')[0]}\n`;
+    // AGREGAR DISTRITO Y DIRECCIÓN AL MENSAJE
+    if (tipoPedido === 'delivery') {
+        if (distritoSelect && distritoSelect.value) {
+            mensaje += `Distrito: ${distritoSelect.value.split(' - ')[0]}\n`;
+        }
+        if (direccionInput && direccionInput.value) {
+            mensaje += `*Dirección:* ${direccionInput.value.trim()}\n`;
+        }
     }
     
     mensaje += `\n*PEDIDO:*\n────────\n`;
